@@ -1,0 +1,32 @@
+.app {
+    display: flex;
+    justify-content:center; 
+    align-items: center;
+}
+
+input, input:focus{
+    background-color: #201E32;
+    border-radius: 10px;
+    border: 0;
+    outline: 0;
+
+    color: white;
+
+    padding: 8px;
+}
+
+form {
+    text-align: center;
+}
+
+h3 {
+    margin: 7px;
+
+    color: white;
+    font-weight: 500;
+}
+
+p {
+    color: #9b9b9b;
+    margin: 7px;
+}
