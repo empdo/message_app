@@ -11,8 +11,14 @@ class ContentManager extends EventEmitter {
     constructor() {
         super();
 
+        
         (window as any).contentManager = this;
         this.token = localStorage.getItem("token");
+
+        if(this.token != null){
+            const parsedJwt = this.parseJwt(this.token);
+            this.user = {id: parsedJwt.sub, name: parsedJwt.name} as User;
+        }
     }    
 
     private request = async (method: "GET" | "POST", body: string | undefined, location: string, token?: string) => {

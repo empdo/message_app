@@ -1,6 +1,7 @@
 import { reverse } from "dns/promises";
 import { sensitiveHeaders } from "http2";
 import React, { Component, Dispatch, useEffect } from "react";
+import { createBuilderStatusReporter, moveSyntheticComments } from "typescript";
 import contentManager from "../../contentmanager";
 import { Message } from "../../interfaces";
 import "./home.scss";
@@ -15,9 +16,8 @@ const getConversations = (id: number | null, conversations: number[], dispatch: 
                     <span />
                     <p >{conversation}</p>
                 </li >
-            )
-        })
-
+            );
+        });
     }
 
     return (
@@ -45,18 +45,19 @@ const getMessages = (convoId: number | null, messages: Message[]) => {
 
     const messageList = () => {
 
-        const orderdMessages = messages.slice(0);
-        orderdMessages.sort((a,b) => {
+        const orderedMessages = messages.slice(0);
+        orderedMessages.sort((a,b) => {
             return a.date - b.date;
-        })
+        });
 
-
-        return orderdMessages.map((message, index) => {
-            if (convoId === message.sender){
-                return messageTemplate(convoId ==  contentManager.user?.id ? "sender": "receiver",index, message);
+        
+        
+        return orderedMessages.map((message, index) => {
+            if (convoId === message.sender || (message.sender === contentManager.user?.id && message.receiver === convoId)){
+                return messageTemplate(message.sender === contentManager.user?.id ? "sender": "receiver",index, message);
             } 
 
-        })
+        });
     }
 
     return (
@@ -75,8 +76,6 @@ export const useMessages = () => {
         const messageCallback = () => {
            if (contentManager.messages !== messages){
                setMessages(contentManager.messages || []);
-
-               console.log(messages);
 
                const convos = contentManager.messages?.map((message) => {
                    return message.sender;
@@ -99,6 +98,7 @@ const Home = () => {
 
     const {messages, conversations} = useMessages();
     const [currentConversation, setCurrentConversation] = React.useState<number | null>(null);
+
 
     console.log(currentConversation);
     return (
