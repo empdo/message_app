@@ -67,7 +67,10 @@ class ContentManager extends EventEmitter {
         }
 
         const response = await this.request("GET", undefined, "/messages", this.token);
-        console.log(await response.json());
+
+        this.messages = await response.json() as Message[];
+
+        this.emit('message');
     }
 
     public sendMessage = async (reciver: number, content: string) => {

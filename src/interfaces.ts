@@ -5,7 +5,7 @@ export interface User {
 
 export interface Message {
     sender: number;
-    reciver: number;
+    receiver: number;
     date: number;
     content: string;
 }

@@ -1,13 +1,16 @@
 import React from "react";
 import "./login.scss";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import contentManager from "../../contentmanager";
+import { useToken } from "../../App";
 
 const Login = () => {
 
     let [name, setName] = React.useState("");
     let [password, setPassword] = React.useState("");
     let navigate = useNavigate();
+    
+    const token = useToken();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, dispatch: React.Dispatch<React.SetStateAction<string>>) => {
         e.preventDefault()
@@ -17,11 +20,17 @@ const Login = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        contentManager.setToken(name, password);
+        await contentManager.setToken(name, password);
 
         navigate("/");
-
     }
+
+
+    React.useEffect(() => {
+        if(token) {
+            navigate("/");
+        }
+    }, [token]);
 
     return (
         <main>
