@@ -5,16 +5,6 @@ import './app.scss';
 import Login from './components/login/login';
 import Home from './components/home/home';
 
-
-const Conversations = () => {
-
-  return (
-    <>
-      <button onClick={() => { localStorage.clear() }}>sign out</button>
-    </>
-  );
-}
-
 export const useToken = () => {
   const [token, setToken] = React.useState<string | null>(localStorage.token || null);
   React.useDebugValue(token);

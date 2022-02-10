@@ -88,14 +88,14 @@ class ContentManager extends EventEmitter {
 
         const response = await this.request("GET", undefined, "/conversation/" + id, this.token);
         
-        this.conversations?.forEach(async conversation => {
+        await Promise.all(this.conversations?.map(async conversation => {
 
             if(conversation.id == id) {
                 conversation.messages = await response.json() as Message[];
             }
 
             this.emit("message");
-        });
+        }));
 
     }
 
@@ -105,9 +105,6 @@ class ContentManager extends EventEmitter {
         }
 
         const response = await this.request("POST", JSON.stringify({reciver: reciver, content}), "/send", this.token);
-
-        console.log(await response.json());
-
     }
 
 

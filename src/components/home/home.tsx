@@ -21,7 +21,9 @@ export const usePopup = (element: JSX.Element): [JSX.Element, (() => void)] => {
 
 }
 
-const Conversations = (props: { conversations: Conversation[], dispatch: React.Dispatch<React.SetStateAction<number | null>> }) => {
+export const CurrentConversationContext = React.createContext<number | null>(null);
+
+const Conversations = (props: { conversations: Conversation[], dispatch: (id: number) => any }) => {
 
     const { conversations, dispatch } = props;
     let inputId = 0;
@@ -68,62 +70,55 @@ const Conversations = (props: { conversations: Conversation[], dispatch: React.D
     );
 }
 
-const Messages = (props: { currentConversation: number | null, conversations: Conversation[] }) => {
-    const { conversations, currentConversation } = props;
+const Messages = () => {
 
-    const messages: Message[] = conversations.find(conversation =>
-        conversation.id === currentConversation && conversation.messages
-        )?.messages || [];
+    const currentConversation = useCurrentConversation();
 
-    console.log(conversations.find(conversation =>
-        true
-        ));
+    const messages: Message[] = currentConversation?.messages || [];
 
-    const messageTemplate = (classes: string, index: number, message: Message) => {
-        return (
+    console.log("messages", messages, currentConversation);
+
+    const messageTemplate = (classes: string, index: number, message: Message) => (
             <div key={index} className={"message " + classes}>
                 <div>
-                    <h2>{message.sender}</h2>
+                    <h2>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h2>
                     <p>{message.content}</p>
                 </div>
             </div>
-        )
-    }
+    )
 
-    const messageList = () => {
+    const MessageList = () => (
+        <div className="message-container">
+            {messages.map((message, index) => messageTemplate(message.sender === contentManager.user?.id ? "sender" : "receiver", index, message))}
+            <MessageSender/>
+        </div>
+    );
 
-        return (
-            messages.map((message, index) => {
-                return messageTemplate(message.sender === contentManager.user?.id ? "sender" : "receiver", index, message);
-            })
-
-        )
-    }
 
     return (
-        <div className="message-container">
-            {messageList()}
-            {/*             <MessageSender currentConversation={props.conversation.id}/>  */}
-        </div>
+        <MessageList />
     )
 }
 
-const MessageSender = (props: { currentConversation: number | null }) => {
-    const currentConversation = props.currentConversation;
+const MessageSender = () => {
+    const currentConversation = useCurrentConversation();
+
+    const {name, id} = currentConversation || {};
     let message = "";
 
     const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (currentConversation) {
-            contentManager.sendMessage(currentConversation, message);
+        if (id) {
+            contentManager.sendMessage(id, message);
 
             e.currentTarget.reset();
 
         }
     }
 
-    const placeholder = currentConversation != null ? "message: #" + currentConversation.toString() : "";
+    const placeholder = currentConversation != null ? "Message @" + name  : "";
+
     return (
         <div >
             <form onSubmit={(e) => sendMessage(e)}>
@@ -134,7 +129,7 @@ const MessageSender = (props: { currentConversation: number | null }) => {
     )
 }
 
-export const useMessages = () => {
+export const useConversations = () => {
     const [conversations, setConversations] = React.useState<Conversation[]>([]);
 
     React.useEffect(() => {
@@ -152,28 +147,48 @@ export const useMessages = () => {
     }, [conversations])
 
     return { conversations };
-
 }
+
+export const useCurrentConversation = () => {
+    const conversation = React.useContext(CurrentConversationContext);
+    return contentManager.conversations.find(conversation2 => conversation2.id === conversation);
+}
+
 
 const Home = () => {
 
     const [currentConversation, setCurrentConversation] = React.useState<number | null>(null);
-    const { conversations } = useMessages();
+    const { conversations } = useConversations();
+
+    const updateCurrentConversation = async (id: number) => {
+        await contentManager.getConversation(id);
+        setCurrentConversation(id);
+    }
 
     React.useEffect(() => {
-
         if (currentConversation) {
-            contentManager.getConversation(currentConversation);
+            updateCurrentConversation(currentConversation);
         }
 
-    }, [currentConversation])
+    }, []);
+
+    /*     React.useEffect(() => {
+    
+            if (currentConversation) {
+                contentManager.getConversation(currentConversation);
+            }
+    
+        }, [currentConversation]); */
+
 
     return (
-        <div id="home">
-            <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload() }}>lohg out!</button>
-            <Conversations conversations={conversations} dispatch={setCurrentConversation} />
-            <Messages currentConversation={currentConversation} conversations={conversations} />
-        </div>
+        <CurrentConversationContext.Provider value={currentConversation}>
+            <div id="home">
+                <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload() }}>lohg out!</button>
+                <Conversations conversations={conversations} dispatch={updateCurrentConversation} />
+                <Messages />
+            </div>
+        </CurrentConversationContext.Provider>
     )
 }
 
