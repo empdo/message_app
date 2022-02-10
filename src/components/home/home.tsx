@@ -88,8 +88,8 @@ const Messages = () => {
     )
 
     const MessageList = () => (
-        <div className="message-container">
-            {messages.map((message, index) => messageTemplate(message.sender === contentManager.user?.id ? "sender" : "receiver", index, message))}
+            <div className="message-container">
+                {messages.map((message, index) => messageTemplate(message.sender === contentManager.user?.id ? "sender" : "receiver", index, message))}
             <MessageSender/>
         </div>
     );

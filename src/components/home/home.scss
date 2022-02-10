@@ -77,20 +77,39 @@
 }
 
 .message-container {
-    flex:1;
-    
-    display: grid;
-    align-content: end;
+    flex: 1;
 
+    display: grid;
+    flex-direction: column;
+    align-content: end;
+    contain: content; 
+    overflow-y: scroll;
+    
+    
     .message {
         margin: 1.4rem 3rem;
+        display: flex;
+        justify-content: start;
+        
+        
         * {
             display: inline;
+        }
+        
+        &:last-child {
+            padding-bottom: 2rem;
         }
     }
 
     .sender {
-        justify-self: right;
+        justify-content: end;
 
+    }
+
+    form {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 }
