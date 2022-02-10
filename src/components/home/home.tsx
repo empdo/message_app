@@ -81,7 +81,7 @@ const Messages = () => {
     const messageTemplate = (classes: string, index: number, message: Message) => (
             <div key={index} className={"message " + classes}>
                 <div>
-                    <h2>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h2>
+                    <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
                     <p>{message.content}</p>
                 </div>
             </div>
