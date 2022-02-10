@@ -33,3 +33,12 @@ button {
     padding: 5px 7px;
     margin-top: 15px;
 }
+
+input {
+  appearance: none;
+  -moz-appearance: textfield;
+}
+
+#light-input {
+    background-color: #201E32;
+}

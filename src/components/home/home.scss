@@ -15,16 +15,45 @@
 
 #convo-bar {
     height: 100%;
+    max-width: 150px;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     background-color: #333140;
     padding: 0 20px;
     
-    * {
+    section > * {
         margin: 10px;
     }
 
+    button {
+        margin-bottom: 10px;
+    }
+
+    input {
+        width: 80%;
+    }
+
+    form {
+        width: 80%;
+    }
+
+    #profile-thing {
+        * {
+            display: inline;
+        }
+    }
+
 }
+
+#send-message-container {
+    width: 80%;
+
+    margin: 1.5rem;
+}
+
 
 .convo-item {
     display: flex;
@@ -35,6 +64,7 @@
 
     * {
         display: inline;
+        margin: 10px;
     }
 
     span {

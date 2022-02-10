@@ -1,12 +1,12 @@
 import EventEmitter from 'events';
-import {User, Message} from './interfaces';
+import {User, Message, Conversation} from './interfaces';
 import jwt from 'jsonwebtoken';
 
 
 class ContentManager extends EventEmitter {
     public token?: string | null;
     public user?: User;
-    public messages?: Message[];
+    public conversations: Conversation[] = [];
 
     constructor() {
         super();
@@ -18,6 +18,8 @@ class ContentManager extends EventEmitter {
         if(this.token != null){
             const parsedJwt = this.parseJwt(this.token);
             this.user = {id: parsedJwt.sub, name: parsedJwt.name} as User;
+
+           this.emit("message");
         }
     }    
 
@@ -67,16 +69,34 @@ class ContentManager extends EventEmitter {
         this.token = token;
     }
 
-    public getMessages = async () => {
+    public getConversations = async () => {
         if(this.token === null){
             return;
         }
 
-        const response = await this.request("GET", undefined, "/messages", this.token);
+        const response = await this.request("GET", undefined, "/conversations", this.token);
 
-        this.messages = await response.json() as Message[];
+        this.conversations = await response.json() as Conversation[];
 
         this.emit('message');
+    }
+
+    public getConversation = async (id: number) => {
+        if(this.token === null){
+            return;
+        }
+
+        const response = await this.request("GET", undefined, "/conversation/" + id, this.token);
+        
+        this.conversations?.forEach(async conversation => {
+
+            if(conversation.id == id) {
+                conversation.messages = await response.json() as Message[];
+            }
+
+            this.emit("message");
+        });
+
     }
 
     public sendMessage = async (reciver: number, content: string) => {
@@ -84,17 +104,12 @@ class ContentManager extends EventEmitter {
             return;
         }
 
-        const response = await this.request("POST", JSON.stringify({reciver, content}), "/send", this.token);
+        const response = await this.request("POST", JSON.stringify({reciver: reciver, content}), "/send", this.token);
 
         console.log(await response.json());
 
     }
 
-
-    public fetchMessages = async () => {
-        this.messages = [];
-        this.emit('message', this.messages)
-    }
 
     public addListener(event: 'message', listener: (article: Message[]) => void): this;
     public addListener(event: string | symbol, listener: (...args: any[]) => void): this {

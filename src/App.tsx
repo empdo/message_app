@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import contentManager from './contentmanager';
 import './app.scss';
 import Login from './components/login/login';
 import Home from './components/home/home';
@@ -37,6 +38,10 @@ export const useToken = () => {
 function RequireAuth({ children}: { children: JSX.Element }) {
   const token = useToken();
   let location = useLocation();
+
+  React.useEffect(() => {
+    contentManager.getConversations()
+  }, [token]);
 
   if (!token) {
     return <Navigate to="/login" state={{ from: location }} replace />;

@@ -9,3 +9,9 @@ export interface Message {
     date: number;
     content: string;
 }
+
+export interface Conversation {
+   id: number,
+   name: string, 
+   messages: Message[] | null,
+}
