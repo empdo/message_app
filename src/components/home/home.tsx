@@ -75,22 +75,31 @@ const Messages = () => {
     const currentConversation = useCurrentConversation();
 
     const messages: Message[] = currentConversation?.messages || [];
+    const messageContainerRef = React.useRef<HTMLDivElement>(null);
 
     console.log("messages", messages, currentConversation);
 
+    React.useEffect(() => {
+        window.setTimeout(() => {
+            if (messageContainerRef.current) {
+                messageContainerRef.current.scrollTo({ top: messageContainerRef.current.scrollHeight });
+            }
+        }, 0);
+    }, [currentConversation]);
+
     const messageTemplate = (classes: string, index: number, message: Message) => (
-            <div key={index} className={"message " + classes}>
-                <div>
-                    <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
-                    <p>{message.content}</p>
-                </div>
+        <div key={index} className={"message " + classes}>
+            <div>
+                <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
+                <p>{message.content}</p>
             </div>
+        </div>
     )
 
     const MessageList = () => (
-            <div className="message-container">
-                {messages.map((message, index) => messageTemplate(message.sender === contentManager.user?.id ? "sender" : "receiver", index, message))}
-            <MessageSender/>
+        <div className="message-container" ref={messageContainerRef}>
+            {messages.map((message, index) => messageTemplate(message.sender === contentManager.user?.id ? "sender" : "receiver", index, message))}
+            <MessageSender />
         </div>
     );
 
@@ -103,7 +112,7 @@ const Messages = () => {
 const MessageSender = () => {
     const currentConversation = useCurrentConversation();
 
-    const {name, id} = currentConversation || {};
+    const { name, id } = currentConversation || {};
     let message = "";
 
     const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
@@ -117,7 +126,7 @@ const MessageSender = () => {
         }
     }
 
-    const placeholder = currentConversation != null ? "Message @" + name  : "";
+    const placeholder = currentConversation != null ? "Message @" + name : "";
 
     return (
         <div >

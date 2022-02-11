@@ -79,12 +79,9 @@
 .message-container {
     flex: 1;
 
-    display: grid;
-    flex-direction: column;
-    align-content: end;
-    contain: content; 
     overflow-y: scroll;
     
+    padding-bottom: 4rem;
     
     .message {
         margin: 1.4rem 3rem;
@@ -96,9 +93,6 @@
             display: inline;
         }
         
-        &:last-child {
-            padding-bottom: 2rem;
-        }
     }
 
     .sender {
@@ -109,7 +103,7 @@
     form {
         position: fixed;
         bottom: 0;
-        left: 0;
+        left: 150px;
         right: 0;
     }
 }
