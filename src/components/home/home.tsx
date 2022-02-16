@@ -1,7 +1,9 @@
 import React from "react";
+import { convertTypeAcquisitionFromJson } from "typescript";
 import contentManager from "../../contentmanager";
 import { Conversation, Message } from "../../interfaces";
 import "./home.scss";
+import Messages from "./Message";
 
 export const usePopup = (element: JSX.Element): [JSX.Element, (() => void)] => {
 
@@ -22,6 +24,7 @@ export const CurrentConversationContext = React.createContext<number | null>(nul
 const Conversations = (props: { conversations: Conversation[], dispatch: (id: number) => any }) => {
 
     const { conversations, dispatch } = props;
+
     let inputId = 0;
     const [popup, tooglePopup] = usePopup(
         <div id="popup">
@@ -51,7 +54,7 @@ const Conversations = (props: { conversations: Conversation[], dispatch: (id: nu
                 <h2>Contacts</h2>
                 <ConversationList />
                 <div>
-                    <form onSubmit={(e) => { e.preventDefault(); dispatch(inputId); }}>
+                    <form onSubmit={async (e) => { e.preventDefault();  dispatch(inputId); }}>
                         <input type="number" placeholder="id" onChange={(value) => { inputId = value.target.valueAsNumber }} />
                     </form>
                 </div>
@@ -66,84 +69,13 @@ const Conversations = (props: { conversations: Conversation[], dispatch: (id: nu
     );
 }
 
-const Messages = () => {
-
-    const currentConversation = useCurrentConversation();
-
-    const messages: Message[] = currentConversation?.messages || [];
-    const messageContainerRef = React.useRef<HTMLDivElement>(null);
-
-    console.log("messages", messages, currentConversation);
-
-    React.useEffect(() => {
-        window.setTimeout(() => {
-            if (messageContainerRef.current) {
-                messageContainerRef.current.scrollTo({ top: messageContainerRef.current.scrollHeight });
-            }
-        }, 0);
-    }, [currentConversation]);
-
-    const messageTemplate = (classes: string, index: number, message: Message) => (
-        <div key={index} className={"message " + classes}>
-            <div>
-                <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
-                <p>{message.content}</p>
-            </div>
-        </div>
-    )
-
-    const MessageList = () => (
-        <div className="message-container" ref={messageContainerRef}>
-            {messages.map((message, index) => messageTemplate(message.sender === contentManager.user?.id ? "sender" : "receiver", index, message))}
-            <MessageSender />
-        </div>
-    );
-
-
-    return (
-        <MessageList />
-    )
-}
-
-const MessageSender = () => {
-    const currentConversation = useCurrentConversation();
-
-    const { name, id } = currentConversation || {};
-    let message = "";
-
-    const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (id) {
-            contentManager.sendMessage(id, message);
-
-            e.currentTarget.reset();
-
-        }
-    }
-
-    const placeholder = currentConversation != null ? "Message @" + name : "";
-
-    return (
-        <div >
-            <form onSubmit={(e) => sendMessage(e)}>
-                <input id="send-message-container" type="text" onChange={(value) => { message = value.target.value }} placeholder={placeholder} />
-
-            </form>
-        </div>
-    )
-}
-
 export const useConversations = () => {
-    const [conversations, setConversations] = React.useState<Conversation[]>([]);
+    const [conversations, setConversations] = React.useState<Conversation[]>(contentManager.conversations);
 
     React.useEffect(() => {
 
         const messageCallback = () => {
-            if (contentManager.conversations !== conversations) {
-
-                setConversations(contentManager.conversations);
-            }
+            setConversations(contentManager.conversations);
         }
 
         contentManager.addListener('message', messageCallback);
@@ -151,43 +83,39 @@ export const useConversations = () => {
         return () => { contentManager.removeListener('message', messageCallback) };
     }, [conversations])
 
-    return { conversations };
+    return conversations;
 }
 
 export const useCurrentConversation = () => {
     const conversation = React.useContext(CurrentConversationContext);
-    return contentManager.conversations.find(conversation2 => conversation2.id === conversation);
+    const conversations = useConversations();
+
+    return conversations.find(conversation2 => conversation2.id === conversation);
 }
 
 
 const Home = () => {
 
-    const [currentConversation, setCurrentConversation] = React.useState<number | null>(null);
-    const { conversations } = useConversations();
+    const [currentConversationId, setCurrentConversation] = React.useState<number | null>(null);
+    const conversations = useConversations();
+
 
     const updateCurrentConversation = async (id: number) => {
         await contentManager.getConversation(id);
+
         setCurrentConversation(id);
     }
 
     React.useEffect(() => {
-        if (currentConversation) {
-            updateCurrentConversation(currentConversation);
+        if (currentConversationId) {
+            updateCurrentConversation(currentConversationId);
         }
 
     }, []);
 
-    /*     React.useEffect(() => {
-    
-            if (currentConversation) {
-                contentManager.getConversation(currentConversation);
-            }
-    
-        }, [currentConversation]); */
-
 
     return (
-        <CurrentConversationContext.Provider value={currentConversation}>
+        <CurrentConversationContext.Provider value={currentConversationId}>
             <div id="home">
                 <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload() }}>lohg out!</button>
                 <Conversations conversations={conversations} dispatch={updateCurrentConversation} />

@@ -20,7 +20,7 @@ const Login = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await contentManager.setToken(name, password);
+        await contentManager.getToken(name, password);
 
         navigate("/");
     }

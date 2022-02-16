@@ -16,10 +16,11 @@ class ContentManager extends EventEmitter {
         this.token = localStorage.getItem("token");
 
         if(this.token != null){
+
             const parsedJwt = this.parseJwt(this.token);
             this.user = {id: parsedJwt.sub, name: parsedJwt.name} as User;
 
-           this.emit("message");
+            this.emit("message");
         }
     }    
 
@@ -53,15 +54,22 @@ class ContentManager extends EventEmitter {
 
     private decodeToken = (token: string) => {
 
-       this.user = this.parseJwt(token) as User;
+        const parsedJwt = this.parseJwt(token);
+        this.user = {id: parsedJwt.sub, name: parsedJwt.name} as User;
+
     }
 
-    public setToken = async (name: string, password: string) => {
+    public getToken = async (name: string, password: string) => {
 
         const response = await this.request("POST", JSON.stringify( { "name": name, "password": password }), "/auth", undefined)
         
         const token = (await response.json())["token"];
 
+        this.setToken(token);
+
+    }
+
+    public setToken = (token: string) => {
 
         localStorage.setItem("token", token);
 
@@ -88,15 +96,34 @@ class ContentManager extends EventEmitter {
         }
 
         const response = await this.request("GET", undefined, "/conversation/" + id, this.token);
-        
-        await Promise.all(this.conversations?.map(async conversation => {
 
-            if(conversation.id == id) {
-                conversation.messages = await response.json() as Message[];
+        let conversation = this.conversations.find(conversation => conversation.id == id);
+
+        const responseJson = await response.json();
+        const messages = responseJson["messages"] as Message[];
+
+        console.log(responseJson);
+
+        if (conversation){
+                conversation.name = responseJson["name"];
+                conversation.messages = messages; 
+
+        } else {
+
+            conversation  = {id: id, messages: messages, name: responseJson["name"]}
+
+            if (conversation.name) {
+                this.conversations.push(conversation);
             }
 
-            this.emit("message");
-        }));
+        }
+
+        this.emit('message');
+
+    }
+
+    public getUserName = (id: number) => {
+
 
     }
 
@@ -106,11 +133,13 @@ class ContentManager extends EventEmitter {
 
         const token = await response.text();
 
-        localStorage.setItem("token", token);
+        console.log(token);
 
-        this.decodeToken(token);
+        if (token === "Unauthorized") return "Unauthorized";
 
-        this.token = token;
+        this.setToken(token);
+
+        return "";
 
     }
 
@@ -123,7 +152,7 @@ class ContentManager extends EventEmitter {
     }
 
 
-    public addListener(event: 'message', listener: (article: Message[]) => void): this;
+    public addListener(event: 'message', listener: (message: Message[]) => void): this;
     public addListener(event: string | symbol, listener: (...args: any[]) => void): this {
         return super.addListener(event, listener);
     }
@@ -131,5 +160,6 @@ class ContentManager extends EventEmitter {
 }
 
 const contentManager = new ContentManager();
+
 
 export default contentManager;
