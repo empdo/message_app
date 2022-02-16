@@ -4,6 +4,7 @@ import contentManager from './contentmanager';
 import './app.scss';
 import Login from './components/login/login';
 import Home from './components/home/home';
+import Signup from './components/signup/Signup';
 
 export const useToken = () => {
   const [token, setToken] = React.useState<string | null>(localStorage.token || null);
@@ -33,8 +34,8 @@ function RequireAuth({ children}: { children: JSX.Element }) {
     contentManager.getConversations()
   }, [token]);
 
-  if (!token) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!token && location.pathname != "/signup") {
+    return <Navigate to={location.pathname != "/signup" ? "/login" : "/signup"} state={{ from: location }} replace />;
   }
 
   return children;
@@ -47,6 +48,7 @@ const App = () => {
     <div className='app'>
       <Routes>
         <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup/>} />
         <Route
           path="*"
           element={

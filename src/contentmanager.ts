@@ -24,7 +24,7 @@ class ContentManager extends EventEmitter {
     }    
 
     private request = async (method: "GET" | "POST", body: string | undefined, location: string, token?: string) => {
-        const headers: {[name: string]: string} = {'content-Type': 'application/json'}
+        const headers: {[name: string]: string} = {'content-Type': 'application/json'};
 
         if (token) headers["authorization"] = "Bearer " + token;
 
@@ -34,7 +34,8 @@ class ContentManager extends EventEmitter {
             body,
         };
 
-        const response = await fetch(location, requestOptions);
+/*         const response = await fetch(process.env.APILOCATION || "", requestOptions); */
+        const response = await fetch("https://messageapi.essung.dev" + location, requestOptions);
 
         return response;
     }
@@ -57,7 +58,7 @@ class ContentManager extends EventEmitter {
 
     public setToken = async (name: string, password: string) => {
 
-        const response = await this.request("POST", JSON.stringify( { "name": name, "password": password }), "/auth")
+        const response = await this.request("POST", JSON.stringify( { "name": name, "password": password }), "/auth", undefined)
         
         const token = (await response.json())["token"];
 
@@ -96,6 +97,20 @@ class ContentManager extends EventEmitter {
 
             this.emit("message");
         }));
+
+    }
+
+    public createUser = async (name: string, password: string) => {
+
+        const response = await this.request("POST", JSON.stringify({name: name, password: password}), "/user");
+
+        const token = await response.text();
+
+        localStorage.setItem("token", token);
+
+        this.decodeToken(token);
+
+        this.token = token;
 
     }
 
