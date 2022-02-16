@@ -97,18 +97,21 @@ class ContentManager extends EventEmitter {
 
         const response = await this.request("GET", undefined, "/conversation/" + id, this.token);
 
-        let conversation = this.conversations.find(conversation => conversation.id == id);
-
+        
         const responseJson = await response.json();
         const messages = responseJson["messages"] as Message[];
+        
+        let conversation = this.conversations.find(conversation => conversation.id == id);
 
-        console.log(responseJson);
+        this.conversations = this.conversations.map(conversation => {
+            if (conversation.id !== id) {
+                return conversation;
+            }
+            
+            return {id: id, name: responseJson["name"], messages: messages}
+        })
 
-        if (conversation){
-                conversation.name = responseJson["name"];
-                conversation.messages = messages; 
-
-        } else {
+        if (!(this.conversations.find(conversation => conversation.id === id))) {
 
             conversation  = {id: id, messages: messages, name: responseJson["name"]}
 
@@ -117,6 +120,7 @@ class ContentManager extends EventEmitter {
             }
 
         }
+
 
         this.emit('message');
 
