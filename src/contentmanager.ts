@@ -1,6 +1,5 @@
 import EventEmitter from 'events';
 import {User, Message, Conversation} from './interfaces';
-import jwt from 'jsonwebtoken';
 
 
 class ContentManager extends EventEmitter {
@@ -101,7 +100,7 @@ class ContentManager extends EventEmitter {
         const responseJson = await response.json();
         const messages = responseJson["messages"] as Message[];
         
-        let conversation = this.conversations.find(conversation => conversation.id == id);
+        let conversation = this.conversations.find(conversation => conversation.id === id);
 
         this.conversations = this.conversations.map(conversation => {
             if (conversation.id !== id) {
@@ -152,7 +151,7 @@ class ContentManager extends EventEmitter {
             return;
         }
 
-        const response = await this.request("POST", JSON.stringify({reciver: reciver, content}), "/send", this.token);
+        await this.request("POST", JSON.stringify({reciver: reciver, content}), "/send", this.token);
     }
 
 
