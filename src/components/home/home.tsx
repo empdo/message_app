@@ -1,7 +1,6 @@
 import React from "react";
-import { convertTypeAcquisitionFromJson } from "typescript";
 import contentManager from "../../contentmanager";
-import { Conversation, Message } from "../../interfaces";
+import { Conversation} from "../../interfaces";
 import "./home.scss";
 import Messages from "./Message";
 
@@ -26,10 +25,6 @@ const Conversations = (props: { conversations: Conversation[], dispatch: (id: nu
     const { conversations, dispatch } = props;
 
     let inputId = 0;
-    const [popup, tooglePopup] = usePopup(
-        <div id="popup">
-        </div>
-    );
 
 
     const ConversationList = () => {
@@ -111,7 +106,7 @@ const Home = () => {
             updateCurrentConversation(currentConversationId);
         }
 
-    }, []);
+    }, [currentConversationId]);
 
 
     return (

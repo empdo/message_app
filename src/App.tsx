@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation} from 'react-router-dom';
 import contentManager from './contentmanager';
 import './app.scss';
 import Login from './components/login/login';
@@ -34,8 +34,8 @@ function RequireAuth({ children}: { children: JSX.Element }) {
     contentManager.getConversations()
   }, [token]);
 
-  if (!token && location.pathname != "/signup") {
-    return <Navigate to={location.pathname != "/signup" ? "/login" : "/signup"} state={{ from: location }} replace />;
+  if (!token && location.pathname !== "/signup") {
+    return <Navigate to={location.pathname !== "/signup" ? "/login" : "/signup"} state={{ from: location }} replace />;
   }
 
   return children;
