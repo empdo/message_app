@@ -81,10 +81,12 @@ const Messages = () => {
                         let previousDate = new Date(((messages[index - 1]) || {}).date * 1000);
                         let sameSender = message.sender === (messages[index -1] || {}).sender;
 
+                        let shouldShowTime = (!datesAreOnSameMinute(date, previousDate) && sameSender) || !datesAreOnSameDay(date, previousDate);
+
                         return (
                             <>
                                 {(datesAreOnSameDay(date, previousDate)) || <Banner key={message.id + "-banner"} date={date} />}
-                                <MessageTemplate key={message.id} shouldShowTime={!datesAreOnSameMinute(date, previousDate) && !sameSender} classes={message.sender === contentManager.user?.id ? "sender" : "receiver"} message={message} />
+                                <MessageTemplate key={message.id} shouldShowTime={shouldShowTime} classes={message.sender === contentManager.user?.id ? "sender" : "receiver"} message={message} />
                             </>
                         )
 
