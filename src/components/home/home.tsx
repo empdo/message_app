@@ -1,5 +1,4 @@
 import React from "react";
-import { clearInterval } from "timers";
 import contentManager from "../../contentmanager";
 import { Conversation} from "../../interfaces";
 import "./home.scss";
