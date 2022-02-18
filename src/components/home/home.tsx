@@ -3,7 +3,7 @@ import contentManager from "../../contentmanager";
 import { Conversation} from "../../interfaces";
 import "./home.scss";
 import Messages from "./Message";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const usePopup = (element: JSX.Element): [JSX.Element, (() => void)] => {
 
