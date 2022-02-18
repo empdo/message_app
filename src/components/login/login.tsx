@@ -18,8 +18,6 @@ const Login = () => {
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
         await contentManager.getToken(name, password);
 
         navigate("/");
@@ -34,7 +32,7 @@ const Login = () => {
 
     return (
         <main>
-            <form onSubmit={e => handleSubmit(e)}>
+            <form onSubmit={e => {e.preventDefault(); handleSubmit(e)}}>
                 <h3>Name</h3>
                 <input type="text" name="name" value={name} onChange={e => handleChange(e, setName)} />
                 <h3>Password</h3>

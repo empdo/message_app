@@ -4,6 +4,7 @@ export interface User {
 }
 
 export interface Message {
+    id: number;
     sender: number;
     receiver: number;
     date: number;

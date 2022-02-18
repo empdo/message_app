@@ -55,6 +55,7 @@ const Conversations = (props: { conversations: Conversation[], dispatch: (id: nu
                 </div>
             </section>
             <section>
+                <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload() }}>lohg out!</button>
                 <div id="profile-thing">
                     <h2>{contentManager.user?.name}</h2>
                     <p># {contentManager.user?.id}</p>
@@ -97,22 +98,24 @@ const Home = () => {
 
     const updateCurrentConversation = async (id: number) => {
         await contentManager.getConversation(id);
-
         setCurrentConversation(id);
     }
 
     React.useEffect(() => {
+        let isMounted = true;
         if (currentConversationId) {
-            updateCurrentConversation(currentConversationId);
+            contentManager.getConversation(currentConversationId).then(() => {
+                if (isMounted) setCurrentConversation(currentConversationId);
+            });
         }
 
+        return () => { isMounted = false };
     }, [currentConversationId]);
 
 
     return (
         <CurrentConversationContext.Provider value={currentConversationId}>
             <div id="home">
-                <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload() }}>lohg out!</button>
                 <Conversations conversations={conversations} dispatch={updateCurrentConversation} />
                 <Messages />
             </div>

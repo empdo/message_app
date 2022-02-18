@@ -18,30 +18,80 @@ const Messages = () => {
         }, 0);
     }, [currentConversation]);
 
-    React.useEffect(() => {
-    
+    const formatDate = (message: Message) => {
+        var date = new Date(message.date * 1000);
 
-    }, [])
+        let time = date.getHours() + ":" + date.getMinutes();
 
-    const messageTemplate = (classes: string, index: number, message: Message) => (
-        <div key={index} className={"message " + classes}>
-            <div>
-                <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
-                <p>{message.content}</p>
+        return (time);
+    }
+
+    const MessageTemplate = (props: { classes: string, message: Message }) => {
+        const { classes, message } = props;
+
+
+        return (
+            <div className={"message " + classes}>
+                <div>
+                    <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
+                    <h5>{formatDate(message)}</h5>
+                    <br />
+                    <p>{message.content}</p>
+                </div>
             </div>
-        </div>
-    )
+        )
+    };
 
-    const MessageList = () => (
-        <div className="message-container" ref={messageContainerRef}>
-            {messages.map((message, index) => messageTemplate(message.sender === contentManager.user?.id ? "sender" : "receiver", index, message))}
-            <MessageSender />
-        </div>
-    );
+    const Banner = (props: { date: Date }) => {
+        const date = props.date;
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["January","February","March","April","May","June","July",
+        "August","September","October","November","December"];
+
+
+        return (
+            <div id="banner">
+                <h3>{days[date.getDay()]} {date.getDate()} {months[date.getMonth()]} {date.getFullYear()}</h3>
+            </div>
+            )
+
+    }
+
+    const datesAreOnSameDay = (first: Date, second: Date) =>
+        first.getFullYear() === second.getFullYear() &&
+        first.getMonth() === second.getMonth() &&
+        first.getDate() === second.getDate();
+
+    const MessageList = (props: { messages: Message[] }) => {
+
+        return (
+            <>
+                {
+                    props.messages.map((message, index) => {
+
+                        let date = new Date(message.date * 1000);
+                        let previousDate = new Date(((messages[index - 1]) || {}).date * 1000);
+
+                        return (
+                            <>
+                                {(datesAreOnSameDay(date, previousDate)) || <Banner key={message.id + "-banner"} date={date}/>}
+                                <MessageTemplate key={message.id} classes={message.sender === contentManager.user?.id ? "sender" : "receiver"} message={message} />
+                            </>
+                        )
+
+                    })
+                }
+            </>
+        )
+
+    }
 
 
     return (
-        <MessageList />
+        <div className="message-container" ref={messageContainerRef}>
+            <MessageList messages={messages} />
+            <MessageSender />
+        </div>
     )
 }
 
@@ -53,8 +103,6 @@ const MessageSender = () => {
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         e.currentTarget.reset();
-
-        e.preventDefault();
 
         if (id && message) {
 
@@ -69,7 +117,7 @@ const MessageSender = () => {
 
     return (
         <div >
-            <form onSubmit={(e) => sendMessage(e)}>
+            <form onSubmit={(e) => { e.preventDefault(); sendMessage(e) }}>
                 <input id="send-message-container" type="text" onChange={(value) => { message = value.target.value }} placeholder={placeholder} />
 
             </form>

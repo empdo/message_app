@@ -15,7 +15,6 @@ const Signup = () => {
     }
     
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
         const createUserResponse = await contentManager.createUser(name, password);
 
         
@@ -31,7 +30,7 @@ const Signup = () => {
     return (
         <>
             <main>
-                <form onSubmit={e => handleSubmit(e)}>
+                <form onSubmit={e => {e.preventDefault(); handleSubmit(e)}}>
                     <h3>Name</h3>
                     <input type="text" name="name" value={name} onChange={e => handleChange(e, setName)} />
                     <h3>Password</h3>
