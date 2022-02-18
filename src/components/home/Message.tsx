@@ -110,10 +110,9 @@ const MessageSender = () => {
     let currentConversation = useCurrentConversation();
 
     const { name, id } = currentConversation || {};
-    let message = "";
+    let [message, setMessage]= React.useState("");
 
-    const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.currentTarget.reset();
+    const sendMessage = async () => {
 
         if (id && message) {
 
@@ -128,8 +127,8 @@ const MessageSender = () => {
 
     return (
         <div >
-            <form onSubmit={(e) => { e.preventDefault(); sendMessage(e) }}>
-                <input id="send-message-container" type="text" onChange={(value) => { message = value.target.value }} placeholder={placeholder} />
+            <form onSubmit={(e) => { e.currentTarget.reset(); e.preventDefault(); sendMessage() }}>
+                <input id="send-message-container" type="text" onChange={(value) => { setMessage(value.target.value) }} placeholder={placeholder} />
 
             </form>
         </div>

@@ -148,7 +148,7 @@ class ContentManager extends EventEmitter {
 
     public sendMessage = async (reciver: number, content: string) => {
         if(this.token === null) {
-            return;
+            throw new Error("Token required");
         }
 
         await this.request("POST", JSON.stringify({reciver: reciver, content}), "/send", this.token);
