@@ -110,7 +110,7 @@ const Home = () => {
             return
         }
 
-        const interval = window.setInterval(() => contentManager.getConversation(id), 1000);
+        const interval = window.setInterval(() => {contentManager.getConversation(id); contentManager.getConversations()}, 1000);
 
         return () => window.clearInterval(interval);
 
