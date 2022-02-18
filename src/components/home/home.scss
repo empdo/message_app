@@ -83,11 +83,13 @@
     overflow-y: scroll;
     
     padding-bottom: 4rem;
+
     
     .message {
         margin: 1.4rem 3rem;
         display: flex;
         justify-content: flex-start;
+        flex-direction: column;
         
         
         * {
@@ -98,7 +100,20 @@
 
     .sender {
         justify-content: end;
+        text-align: end;
+        
+        p {margin: 0;}
 
+        .message-title {
+            display: flex;
+            flex-direction: row-reverse;
+
+            align-items: center;
+
+            h5 {
+                margin-top: 7px;
+            }
+        }
     }
 
     form {

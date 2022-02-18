@@ -32,12 +32,11 @@ const Messages = () => {
 
         return (
             <div className={"message " + classes}>
-                <div>
-                    <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
-                    <h5>{formatDate(message)}</h5>
-                    <br />
+                    <div className="message-title">
+                        <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
+                        <h5>{formatDate(message)}</h5>
+                    </div>
                     <p>{message.content}</p>
-                </div>
             </div>
         )
     };
@@ -45,15 +44,15 @@ const Messages = () => {
     const Banner = (props: { date: Date }) => {
         const date = props.date;
         const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const months = ["January","February","March","April","May","June","July",
-        "August","September","October","November","December"];
+        const months = ["January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"];
 
 
         return (
             <div id="banner">
                 <h3>{days[date.getDay()]} {date.getDate()} {months[date.getMonth()]} {date.getFullYear()}</h3>
             </div>
-            )
+        )
 
     }
 
@@ -74,7 +73,7 @@ const Messages = () => {
 
                         return (
                             <>
-                                {(datesAreOnSameDay(date, previousDate)) || <Banner key={message.id + "-banner"} date={date}/>}
+                                {(datesAreOnSameDay(date, previousDate)) || <Banner key={message.id + "-banner"} date={date} />}
                                 <MessageTemplate key={message.id} classes={message.sender === contentManager.user?.id ? "sender" : "receiver"} message={message} />
                             </>
                         )
