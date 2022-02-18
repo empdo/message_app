@@ -1,4 +1,5 @@
 import React from "react";
+import { clearInterval } from "timers";
 import contentManager from "../../contentmanager";
 import { Conversation} from "../../interfaces";
 import "./home.scss";
@@ -93,7 +94,6 @@ export const useCurrentConversation = () => {
 const Home = () => {
 
     const [currentConversationId, setCurrentConversation] = React.useState<number | null>(null);
-    const interval = setInterval(() => contentManager.getConversation(currentConversationId), 1000);
     const conversations = useConversations();
 
 
@@ -112,6 +112,14 @@ const Home = () => {
 
         return () => { isMounted = false };
     }, [currentConversationId]);
+
+    React.useEffect(() => {
+
+        const interval = window.setInterval(() => contentManager.getConversation(currentConversationId), 1000);
+
+        return () => window.clearInterval(interval);
+
+    }, [currentConversationId])
 
 
     return (
