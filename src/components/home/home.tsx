@@ -3,6 +3,7 @@ import contentManager from "../../contentmanager";
 import { Conversation} from "../../interfaces";
 import "./home.scss";
 import Messages from "./Message";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 export const usePopup = (element: JSX.Element): [JSX.Element, (() => void)] => {
 
@@ -83,51 +84,45 @@ export const useConversations = () => {
 }
 
 export const useCurrentConversation = () => {
-    const conversation = React.useContext(CurrentConversationContext);
+    const id = parseInt(useParams().id || "");
     const conversations = useConversations();
 
-    return conversations.find(conversation2 => conversation2.id === conversation);
+    return conversations.find(conversation2 => conversation2.id === id);
 }
 
 
 const Home = () => {
 
-    const [currentConversationId, setCurrentConversation] = React.useState<number | null>(null);
     const conversations = useConversations();
+    const navigate = useNavigate();
+    const id = parseInt(useParams().id || "");
+
 
 
     const updateCurrentConversation = async (id: number) => {
         await contentManager.getConversation(id);
-        setCurrentConversation(id);
+
+        navigate("/conversation/" + id)
     }
 
     React.useEffect(() => {
-        let isMounted = true;
-        if (currentConversationId) {
-            contentManager.getConversation(currentConversationId).then(() => {
-                if (isMounted) setCurrentConversation(currentConversationId);
-            });
+        if (!id) {
+            return
         }
 
-        return () => { isMounted = false };
-    }, [currentConversationId]);
-
-    React.useEffect(() => {
-
-        const interval = window.setInterval(() => contentManager.getConversation(currentConversationId), 1000);
+        const interval = window.setInterval(() => contentManager.getConversation(id), 1000);
 
         return () => window.clearInterval(interval);
 
-    }, [currentConversationId])
+    }, [id]);
+
 
 
     return (
-        <CurrentConversationContext.Provider value={currentConversationId}>
-            <div id="home">
-                <Conversations conversations={conversations} dispatch={updateCurrentConversation} />
-                <Messages />
-            </div>
-        </CurrentConversationContext.Provider>
+        <div id="home">
+            <Conversations conversations={conversations} dispatch={updateCurrentConversation} />
+            <Messages />
+        </div>
     )
 }
 
