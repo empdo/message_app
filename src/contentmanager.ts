@@ -84,7 +84,20 @@ class ContentManager extends EventEmitter {
 
         const response = await this.request("GET", undefined, "/conversations", this.token);
 
-        this.conversations = await response.json() as Conversation[];
+        const conversations = await response.json() as Conversation[];
+        const existingConversations = this.conversations.map(c => c.id);
+
+        conversations.map(conversation => {
+            const conversation2 = this.conversations.find(c => existingConversations.includes(c.id))
+
+            if(conversation2?.messages) {
+                conversation.messages = conversation2.messages;
+            }
+
+            return conversation;
+        });
+
+        this.conversations = conversations;
 
         this.emit('message');
     }
