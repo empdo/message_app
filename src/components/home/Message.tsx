@@ -84,7 +84,7 @@ const Messages = () => {
                         return (
                             <>
                                 {(datesAreOnSameDay(date, previousDate)) || <Banner key={message.id + "-banner"} date={date} />}
-                                <MessageTemplate key={message.id} shouldShowTime={!datesAreOnSameMinute(date, previousDate) && sameSender} classes={message.sender === contentManager.user?.id ? "sender" : "receiver"} message={message} />
+                                <MessageTemplate key={message.id} shouldShowTime={!datesAreOnSameMinute(date, previousDate) && !sameSender} classes={message.sender === contentManager.user?.id ? "sender" : "receiver"} message={message} />
                             </>
                         )
 
