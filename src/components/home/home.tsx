@@ -93,6 +93,7 @@ export const useCurrentConversation = () => {
 const Home = () => {
 
     const [currentConversationId, setCurrentConversation] = React.useState<number | null>(null);
+    const interval = setInterval(() => contentManager.getConversation(currentConversationId), 1000);
     const conversations = useConversations();
 
 

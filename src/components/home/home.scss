@@ -84,9 +84,13 @@
     
     padding-bottom: 4rem;
 
+    &:last-child {
+        margin: 1.4rem;
+    }
+
     
     .message {
-        margin: 1.4rem 3rem;
+        margin: 0 3rem;
         display: flex;
         justify-content: flex-start;
         flex-direction: column;
@@ -104,6 +108,7 @@
         
         .message-title {
             display: flex;
+            margin-top: 1.4rem;
             flex-direction: row-reverse;
 
             align-items: center;

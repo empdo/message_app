@@ -89,8 +89,8 @@ class ContentManager extends EventEmitter {
         this.emit('message');
     }
 
-    public getConversation = async (id: number) => {
-        if(this.token === null){
+    public getConversation = async (id: number | null) => {
+        if(this.token === null || id == null){
             return;
         }
 
