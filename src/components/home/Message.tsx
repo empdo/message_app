@@ -81,7 +81,7 @@ const Messages = () => {
                         let previousDate = new Date(((messages[index - 1]) || {}).date * 1000);
                         let sameSender = message.sender === (messages[index -1] || {}).sender;
 
-                        let shouldShowTime = (!datesAreOnSameMinute(date, previousDate) && sameSender) || !datesAreOnSameDay(date, previousDate);
+                        let shouldShowTime = !datesAreOnSameMinute(date, previousDate) || !sameSender || !datesAreOnSameDay(date, previousDate);
 
                         return (
                             <>
