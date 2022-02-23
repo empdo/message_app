@@ -2,7 +2,7 @@ import contentManager from "./contentmanager";
 import { Message } from "./interfaces";
 
 class SocketHandeler {
-    public socket = new WebSocket('ws://localhost:4678');
+    public socket = new WebSocket('ws://messageapi.essung.dev');
 
     closeConnection = () => {
         this.socket.close();
