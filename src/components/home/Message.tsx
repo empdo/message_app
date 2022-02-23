@@ -21,7 +21,7 @@ const Messages = () => {
     const formatDate = (message: Message) => {
         var date = new Date(message.date * 1000);
 
-        let time = date.getHours() + ":" + date.getMinutes();
+        let time = date.getHours() + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
 
         return (time);
     }
@@ -84,10 +84,10 @@ const Messages = () => {
                         let shouldShowTime = !datesAreOnSameMinute(date, previousDate) || !sameSender || !datesAreOnSameDay(date, previousDate);
 
                         return (
-                            <>
-                                {(datesAreOnSameDay(date, previousDate)) || <Banner key={message.id + "-banner"} date={date} />}
-                                <MessageTemplate key={message.id} shouldShowTime={shouldShowTime} classes={message.sender === contentManager.user?.id ? "sender" : "receiver"} message={message} />
-                            </>
+                            <React.Fragment key={message.id }>
+                                {(datesAreOnSameDay(date, previousDate)) || <Banner date={date} />}
+                                <MessageTemplate  shouldShowTime={shouldShowTime} classes={message.sender === contentManager.user?.id ? "sender" : "receiver"} message={message} />
+                            </React.Fragment>
                         )
 
                     })
@@ -115,7 +115,6 @@ const MessageSender = () => {
     const sendMessage = async () => {
 
         if (id && message) {
-
             await contentManager.sendMessage(id, message);
 
             await contentManager.getConversation(id);
@@ -129,7 +128,6 @@ const MessageSender = () => {
         <div >
             <form onSubmit={(e) => { e.currentTarget.reset(); e.preventDefault(); sendMessage() }}>
                 <input id="send-message-container" type="text" onChange={(value) => { setMessage(value.target.value) }} placeholder={placeholder} />
-
             </form>
         </div>
     )

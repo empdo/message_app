@@ -1,29 +1,15 @@
 import React from "react";
 import contentManager from "../../contentmanager";
-import { Conversation} from "../../interfaces";
+import { Conversation } from "../../interfaces";
 import "./home.scss";
 import Messages from "./Message";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const usePopup = (element: JSX.Element): [JSX.Element, (() => void)] => {
 
-    const [popup, setPopup] = React.useState<boolean>(false);
-
-    const toogle = () => {
-        setPopup(!popup);
-    }
-
-    const component = popup ? element : <></>;
-
-    return [component, toogle]
-
-}
-
-export const CurrentConversationContext = React.createContext<number | null>(null);
-
-const Conversations = (props: { conversations: Conversation[], dispatch: (id: number) => any }) => {
-
-    const { conversations, dispatch } = props;
+const Conversations = (props: { dispatch: (id: number) => any }) => {
+    
+    const { dispatch } = props;
+    const conversations = useConversations();
 
     let inputId = 0;
 
@@ -50,13 +36,13 @@ const Conversations = (props: { conversations: Conversation[], dispatch: (id: nu
                 <h2>Contacts</h2>
                 <ConversationList />
                 <div>
-                    <form onSubmit={async (e) => { e.preventDefault();  dispatch(inputId); }}>
+                    <form onSubmit={async (e) => { e.preventDefault(); dispatch(inputId); }}>
                         <input type="number" placeholder="id" onChange={(value) => { inputId = value.target.valueAsNumber }} />
                     </form>
                 </div>
             </section>
             <section>
-                <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload() }}>lohg out!</button>
+                <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload();  contentManager.socketHandeler.closeConnection(); }}>lohg out!</button>
                 <div id="profile-thing">
                     <h2>{contentManager.user?.name}</h2>
                     <p># {contentManager.user?.id}</p>
@@ -93,33 +79,17 @@ export const useCurrentConversation = () => {
 
 const Home = () => {
 
-    const conversations = useConversations();
     const navigate = useNavigate();
-    const id = parseInt(useParams().id || "");
 
+    const updateCurrentConversation = async (currentConvoId: number) => {
+        await contentManager.getConversation(currentConvoId);
 
-
-    const updateCurrentConversation = async (id: number) => {
-        await contentManager.getConversation(id);
-
-        navigate("/conversation/" + id)
+        navigate("/conversation/" + currentConvoId);
     }
-
-    React.useEffect(() => {
-        if (!id) {
-            return
-        }
-
-        const interval = window.setInterval(async () => {await contentManager.getConversation(id); await contentManager.getConversations()}, 1000);
-        return () => window.clearInterval(interval);
-
-    }, [id]);
-
-
 
     return (
         <div id="home">
-            <Conversations conversations={conversations} dispatch={updateCurrentConversation} />
+            <Conversations dispatch={updateCurrentConversation} />
             <Messages />
         </div>
     )

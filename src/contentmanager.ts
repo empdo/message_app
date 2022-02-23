@@ -1,30 +1,34 @@
 import EventEmitter from 'events';
-import {User, Message, Conversation} from './interfaces';
+import { User, Message, Conversation } from './interfaces';
+ import SocketHandeler from "./websocket"; 
 
 
 class ContentManager extends EventEmitter {
     public token?: string | null;
     public user?: User;
     public conversations: Conversation[] = [];
+     public socketHandeler = new SocketHandeler(); 
 
     constructor() {
         super();
 
-        
         (window as any).contentManager = this;
         this.token = localStorage.getItem("token");
 
-        if(this.token != null){
+        if (this.token != null) {
 
             const parsedJwt = this.parseJwt(this.token);
-            this.user = {id: parsedJwt.sub, name: parsedJwt.name} as User;
+            this.user = { id: parsedJwt.sub, name: parsedJwt.name } as User;
+
+            this.socketHandeler.startConnection(); 
 
             this.emit("message");
+
         }
-    }    
+    }
 
     private request = async (method: "GET" | "POST", body: string | undefined, location: string, token?: string) => {
-        const headers: {[name: string]: string} = {'content-Type': 'application/json'};
+        const headers: { [name: string]: string } = { 'content-Type': 'application/json' };
 
         if (token) headers["authorization"] = "Bearer " + token;
 
@@ -34,19 +38,19 @@ class ContentManager extends EventEmitter {
             body,
         };
 
-/*         const response = await fetch(process.env.APILOCATION || "", requestOptions); */
-        const response = await fetch("https://messageapi.essung.dev" + location, requestOptions);
+        /*         const response = await fetch(process.env.APILOCATION || "", requestOptions); */
+        const response = await fetch("http://localhost:4678" + location, requestOptions);
 
         return response;
     }
 
-    parseJwt (token: string) {
+    parseJwt(token: string) {
         var base64Url = token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
-    
+
         return JSON.parse(jsonPayload);
     };
 
@@ -54,13 +58,13 @@ class ContentManager extends EventEmitter {
     private decodeToken = (token: string) => {
 
         const parsedJwt = this.parseJwt(token);
-        this.user = {id: parsedJwt.sub, name: parsedJwt.name} as User;
+        this.user = { id: parsedJwt.sub, name: parsedJwt.name } as User;
 
     }
 
     public getToken = async (name: string, password: string) => {
 
-        const response = await this.request("POST", JSON.stringify( { "name": name, "password": password }), "/auth", undefined)
+        const response = await this.request("POST", JSON.stringify( { name, password }), "/auth", undefined)
         
         const token = (await response.json())["token"];
 
@@ -75,27 +79,20 @@ class ContentManager extends EventEmitter {
         this.decodeToken(token);
 
         this.token = token;
+
+        if(this.socketHandeler.socket.readyState === 3) {
+            this.socketHandeler.startConnection();
+        }
     }
 
     public getConversations = async () => {
-        if(this.token === null){
+        if (this.token === null) {
             return;
         }
 
         const response = await this.request("GET", undefined, "/conversations", this.token);
 
         const conversations = await response.json() as Conversation[];
-        const existingConversations = this.conversations.map(c => c.id);
-
-        conversations.map(conversation => {
-            const conversation2 = this.conversations.find(c => existingConversations.includes(c.id))
-
-            if(conversation2?.messages) {
-                conversation.messages = conversation2.messages;
-            }
-
-            return conversation;
-        });
 
         this.conversations = conversations;
 
@@ -103,29 +100,29 @@ class ContentManager extends EventEmitter {
     }
 
     public getConversation = async (id: number | null) => {
-        if(this.token === null || id == null){
+        if (this.token === null || id == null) {
             return;
         }
 
         const response = await this.request("GET", undefined, "/conversation/" + id, this.token);
 
-        
+
         const responseJson = await response.json();
         const messages = responseJson["messages"] as Message[];
-        
+
         let conversation = this.conversations.find(conversation => conversation.id === id);
 
         this.conversations = this.conversations.map(conversation => {
             if (conversation.id !== id) {
                 return conversation;
             }
-            
-            return {id: id, name: responseJson["name"], messages: messages}
+
+            return { id: id, name: responseJson["name"], messages: messages }
         })
 
         if (!(this.conversations.find(conversation => conversation.id === id))) {
 
-            conversation  = {id: id, messages: messages, name: responseJson["name"]}
+            conversation = { id: id, messages: messages, name: responseJson["name"] }
 
             if (conversation.name) {
                 this.conversations.push(conversation);
@@ -143,9 +140,36 @@ class ContentManager extends EventEmitter {
 
     }
 
+    public addMessage = (message: Message) => {
+
+        const existingConvos = this.conversations.map(conversation => conversation.id);
+
+        console.log(message.sender);
+
+        if (!existingConvos.includes(message.sender)) {
+            this.getConversation(message.sender);
+
+            console.log("does not include");
+
+            return;
+
+        }
+
+        this.conversations = this.conversations.map(conversation => {
+            if (conversation.id === message.sender) {
+                return {id: conversation.id, messages: conversation.messages?.concat(message), name: conversation.name} as Conversation;
+            }
+            
+            return conversation;
+        });
+        console.log(this.conversations);
+
+        this.emit("message");
+    }
+
     public createUser = async (name: string, password: string) => {
 
-        const response = await this.request("POST", JSON.stringify({name: name, password: password}), "/user");
+        const response = await this.request("POST", JSON.stringify({ name: name, password: password }), "/user");
 
         const token = await response.text();
 
@@ -160,11 +184,11 @@ class ContentManager extends EventEmitter {
     }
 
     public sendMessage = async (reciver: number, content: string) => {
-        if(this.token === null) {
+        if (this.token === null) {
             throw new Error("Token required");
         }
 
-        await this.request("POST", JSON.stringify({reciver: reciver, content}), "/send", this.token);
+        await this.request("POST", JSON.stringify({ reciver: reciver, content }), "/send", this.token);
     }
 
 
@@ -176,6 +200,7 @@ class ContentManager extends EventEmitter {
 }
 
 const contentManager = new ContentManager();
+
 
 
 export default contentManager;
