@@ -39,7 +39,7 @@ class ContentManager extends EventEmitter {
         };
 
         /*         const response = await fetch(process.env.APILOCATION || "", requestOptions); */
-        const response = await fetch("http://localhost:4678" + location, requestOptions);
+        const response = await fetch("https://messageapi.essung.dev" + location, requestOptions);
 
         return response;
     }
