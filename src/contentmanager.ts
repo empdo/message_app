@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { User, Message, Conversation } from './interfaces';
- import SocketHandeler from "./websocket"; 
+import SocketHandeler from "./websocket"; 
 
 
 class ContentManager extends EventEmitter {
