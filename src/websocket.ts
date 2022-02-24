@@ -2,24 +2,38 @@ import contentManager from "./contentmanager";
 import { Message } from "./interfaces";
 
 class SocketHandeler {
-    public socket = new WebSocket('wss://messageapi.essung.dev');
+    public socket?: WebSocket;
 
     closeConnection = () => {
-        this.socket.close();
+        if(this.socket) {
+            this.socket.close();
+        }
     }
 
-    startConnection = () => {
+    startConnection = (token: string) => {
+        this.socket = new WebSocket('wss://messageapi.essung.dev');
+
+        if (!token && this.socket) {
+            return;
+        }
+
+        
         this.socket.addEventListener('open', (event) => {
+            if (!this.socket) {
+                return;
+            }
+
             this.socket.send(JSON.stringify({
                 action: "listen",
-                token: contentManager.token,
+                token: token
             }));
-
         });
+
+
 
         this.socket.addEventListener('message', (event) => {
             const data = event.data;
-        
+
             const parsedData = JSON.parse(data.toString());
 
             const message = parsedData.message as Message;
@@ -27,7 +41,7 @@ class SocketHandeler {
             contentManager.addMessage(message);
 
         });
-        
+
     }
 
 

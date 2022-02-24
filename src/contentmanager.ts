@@ -7,7 +7,7 @@ class ContentManager extends EventEmitter {
     public token?: string | null;
     public user?: User;
     public conversations: Conversation[] = [];
-     public socketHandeler = new SocketHandeler(); 
+    public socketHandeler?: SocketHandeler; 
 
     constructor() {
         super();
@@ -15,12 +15,14 @@ class ContentManager extends EventEmitter {
         (window as any).contentManager = this;
         this.token = localStorage.getItem("token");
 
+        this.socketHandeler = new SocketHandeler();
+
         if (this.token != null) {
 
             const parsedJwt = this.parseJwt(this.token);
             this.user = { id: parsedJwt.sub, name: parsedJwt.name } as User;
 
-            this.socketHandeler.startConnection(); 
+            this.socketHandeler.startConnection(this.token); 
 
             this.emit("message");
 
@@ -74,15 +76,19 @@ class ContentManager extends EventEmitter {
 
     public setToken = (token: string) => {
 
+        if(!token) {
+            return;
+        }
+
         localStorage.setItem("token", token);
 
         this.decodeToken(token);
 
         this.token = token;
 
-        if(this.socketHandeler.socket.readyState === 3) {
-            this.socketHandeler.startConnection();
-        }
+       if (this.socketHandeler) {
+           this.socketHandeler.startConnection(token);
+       } 
     }
 
     public getConversations = async () => {
@@ -144,7 +150,7 @@ class ContentManager extends EventEmitter {
 
         const existingConvos = this.conversations.map(conversation => conversation.id);
 
-        console.log(message.sender);
+        console.log(message.sender, existingConvos);
 
         if (!existingConvos.includes(message.sender)) {
             this.getConversation(message.sender);

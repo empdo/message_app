@@ -42,7 +42,7 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
                 </div>
             </section>
             <section>
-                <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload();  contentManager.socketHandeler.closeConnection(); }}>lohg out!</button>
+                <button id="logout" onClick={() => { localStorage.removeItem("token"); window.location.reload();  if (contentManager.socketHandeler) contentManager.socketHandeler.closeConnection(); }}>lohg out!</button>
                 <div id="profile-thing">
                     <h2>{contentManager.user?.name}</h2>
                     <p># {contentManager.user?.id}</p>
