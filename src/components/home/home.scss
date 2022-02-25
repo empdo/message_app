@@ -7,7 +7,7 @@
 }
 
 #logout {
-  margin: 25px;
+  height: 1rem;
 }
 
 #banner {
@@ -16,14 +16,20 @@
 
 #convo-bar {
   height: 100%;
-  max-width: 150px;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: flex-start;
 
   background-color: #333140;
-  padding: 0 20px;
+  padding-left: 20px;
+
+  text-overflow: ellipsis;
+  span {
+      margin: 10px ;
+      margin-left: 0px;
+  }
 
   ul {
     max-height: 60vh;
@@ -40,16 +46,22 @@
   }
 
   input {
-    width: 80%;
+    width: 55px;
   }
 
   form {
-    width: 80%;
-  }
+      width: 55px;
+  } 
 
   #profile-thing {
-    * {
-      display: inline;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    img {
+      cursor: pointer;
+      filter: invert(1);
+      margin: 15px;
     }
   }
 }
@@ -80,15 +92,12 @@
   }
 }
 
-.message-container {
+#messagelist {
+  overflow-y: scroll;
   flex: 1;
 
-  overflow-y: scroll;
-
-  padding-bottom: 4rem;
-
-  &:last-child {
-    margin: 1.4rem;
+  &:first-child {
+      margin-top: 1rem;
   }
 
   .message {
@@ -101,7 +110,6 @@
       display: inline;
     }
   }
-
   .sender {
     justify-content: end;
     text-align: end;
@@ -118,12 +126,17 @@
       }
     }
   }
+}
+
+.message-container {
+  display: flex;
+
+  flex: 1;
+  flex-direction: column;
 
   form {
-    position: fixed;
     bottom: 0;
-    left: 190px;
-    right: 0;
+    width: 100%;
 
     background-color: #181623;
   }

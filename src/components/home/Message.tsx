@@ -99,8 +99,10 @@ const Messages = () => {
 
 
     return (
-        <div className="message-container" ref={messageContainerRef}>
-            <MessageList messages={messages} />
+        <div className="message-container">
+                <div id="messagelist" ref={messageContainerRef}>
+                    <MessageList messages={messages} />
+                </div>
             <MessageSender />
         </div>
     )

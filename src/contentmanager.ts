@@ -115,16 +115,24 @@ class ContentManager extends EventEmitter {
 
         const responseJson = await response.json();
         const messages = responseJson["messages"] as Message[];
-
-        this.conversations = this.conversations.filter(conversation => conversation.id !== id);
-        
         const conversation = { id: id, messages: messages, name: responseJson["name"] }
 
-        console.log(this.conversations);
+        if (this.conversations.find(conversation => conversation.id === id)) { //bad solution
+            this.conversations = this.conversations.map(convo => {
+                
+                if(convo.id == id) {
+                    return conversation;
+                }
 
-        if (conversation.name) {
-            this.conversations.unshift(conversation);
+                return convo;
+            });
+
+            this.emit('message');
+            return;
         }
+
+        
+        this.addFirst(conversation);
 
         this.emit('message');
 
@@ -159,14 +167,22 @@ class ContentManager extends EventEmitter {
             return convo;
         });
 
+        this.addFirst(conversation);
+
+        this.emit("message");
+    }
+
+    public addFirst = (conversation: Conversation | undefined) => {
+
+        if(!conversation) {
+            return;
+        }
 
         this.conversations = this.conversations.filter(convo => convo.id !== conversation.id);
         
         if (conversation.name) {
             this.conversations.unshift(conversation);
         }
-
-        this.emit("message");
     }
 
     public createUser = async (name: string, password: string) => {
@@ -189,6 +205,8 @@ class ContentManager extends EventEmitter {
         if (this.token === null) {
             throw new Error("Token required");
         }
+
+        this.addFirst(this.conversations.find(conversation => conversation.id === reciver));
 
         await this.request("POST", JSON.stringify({ reciver: reciver, content }), "/send", this.token);
     }
