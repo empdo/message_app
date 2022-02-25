@@ -116,26 +116,15 @@ class ContentManager extends EventEmitter {
         const responseJson = await response.json();
         const messages = responseJson["messages"] as Message[];
 
-        let conversation = this.conversations.find(conversation => conversation.id === id);
+        this.conversations = this.conversations.filter(conversation => conversation.id !== id);
+        
+        const conversation = { id: id, messages: messages, name: responseJson["name"] }
 
-        this.conversations = this.conversations.map(conversation => {
-            if (conversation.id !== id) {
-                return conversation;
-            }
+        console.log(this.conversations);
 
-            return { id: id, name: responseJson["name"], messages: messages }
-        })
-
-        if (!(this.conversations.find(conversation => conversation.id === id))) {
-
-            conversation = { id: id, messages: messages, name: responseJson["name"] }
-
-            if (conversation.name) {
-                this.conversations.push(conversation);
-            }
-
+        if (conversation.name) {
+            this.conversations.unshift(conversation);
         }
-
 
         this.emit('message');
 
@@ -149,6 +138,7 @@ class ContentManager extends EventEmitter {
     public addMessage = (message: Message) => {
 
         const existingConvos = this.conversations.map(conversation => conversation.id);
+        let conversation = {} as Conversation;
 
         console.log(message.sender, existingConvos);
 
@@ -161,14 +151,20 @@ class ContentManager extends EventEmitter {
 
         }
 
-        this.conversations = this.conversations.map(conversation => {
-            if (conversation.id === message.sender) {
-                return {id: conversation.id, messages: conversation.messages?.concat(message), name: conversation.name} as Conversation;
+        this.conversations = this.conversations.map(convo => {
+            if (convo.id === message.sender) {
+               conversation = {id: convo.id, messages: convo.messages?.concat(message), name: convo.name} as Conversation;
             }
             
-            return conversation;
+            return convo;
         });
-        console.log(this.conversations);
+
+
+        this.conversations = this.conversations.filter(convo => convo.id !== conversation.id);
+        
+        if (conversation.name) {
+            this.conversations.unshift(conversation);
+        }
 
         this.emit("message");
     }

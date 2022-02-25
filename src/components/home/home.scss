@@ -1,130 +1,130 @@
 #home {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 #logout {
-    margin: 25px;
+  margin: 25px;
 }
 
 #banner {
-    text-align: center;
+  text-align: center;
 }
 
 #convo-bar {
-    height: 100%;
-    max-width: 150px;
+  height: 100%;
+  max-width: 150px;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-    background-color: #333140;
-    padding: 0 20px;
-    
-    section > * {
-        margin: 10px;
+  background-color: #333140;
+  padding: 0 20px;
+
+  ul {
+    max-height: 60vh;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
+
+  section > * {
+    margin: 10px;
+  }
+
+  button {
+    margin-bottom: 10px;
+  }
+
+  input {
+    width: 80%;
+  }
+
+  form {
+    width: 80%;
+  }
+
+  #profile-thing {
+    * {
+      display: inline;
     }
-
-    button {
-        margin-bottom: 10px;
-    }
-
-    input {
-        width: 80%;
-    }
-
-    form {
-        width: 80%;
-    }
-
-    #profile-thing {
-        * {
-            display: inline;
-        }
-    }
-
+  }
 }
 
 #send-message-container {
-    width: 80%;
+  width: 80%;
 
-    margin: 1.5rem;
+  margin: 1.5rem;
 }
 
-
 .convo-item {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    cursor: pointer;
+  cursor: pointer;
 
+  * {
+    display: inline;
+    margin: 10px;
+  }
 
-    * {
-        display: inline;
-        margin: 10px;
-    }
-
-    span {
-        height: 30px;
-        width: 30px;
-        background-color: #bbb;
-        border-radius: 50%;
-        display: inline-block;
-    }
+  span {
+    height: 30px;
+    width: 30px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
 }
 
 .message-container {
-    flex: 1;
+  flex: 1;
 
-    overflow-y: scroll;
-    
-    padding-bottom: 4rem;
+  overflow-y: scroll;
 
-    &:last-child {
-        margin: 1.4rem;
+  padding-bottom: 4rem;
+
+  &:last-child {
+    margin: 1.4rem;
+  }
+
+  .message {
+    margin: 0 3rem;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+
+    * {
+      display: inline;
     }
+  }
 
-    
-    .message {
-        margin: 0 3rem;
-        display: flex;
-        justify-content: flex-start;
-        flex-direction: column;
-        
-        
-        * {
-            display: inline;
-        }
-        
+  .sender {
+    justify-content: end;
+    text-align: end;
+
+    .message-title {
+      display: flex;
+      margin-top: 1.4rem;
+      flex-direction: row-reverse;
+
+      align-items: center;
+
+      h5 {
+        margin-top: 7px;
+      }
     }
+  }
 
-    .sender {
-        justify-content: end;
-        text-align: end;
-        
-        .message-title {
-            display: flex;
-            margin-top: 1.4rem;
-            flex-direction: row-reverse;
+  form {
+    position: fixed;
+    bottom: 0;
+    left: 190px;
+    right: 0;
 
-            align-items: center;
-
-            h5 {
-                margin-top: 7px;
-            }
-        }
-    }
-
-    form {
-        position: fixed;
-        bottom: 0;
-        left: 190px;
-        right: 0;
-
-        background-color: #181623;
-    }
+    background-color: #181623;
+  }
 }
