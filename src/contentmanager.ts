@@ -132,14 +132,7 @@ class ContentManager extends EventEmitter {
         }
 
         
-        this.addFirst(conversation);
-
         this.emit('message');
-
-    }
-
-    public getUserName = (id: number) => {
-
 
     }
 
