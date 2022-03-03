@@ -115,23 +115,26 @@ class ContentManager extends EventEmitter {
 
         const responseJson = await response.json();
         const messages = responseJson["messages"] as Message[];
-        const conversation = { id: id, messages: messages, name: responseJson["name"] }
+        let conversation = this.conversations.find(conversation => conversation.id === id);
 
-        if (this.conversations.find(conversation => conversation.id === id)) { //bad solution
-            this.conversations = this.conversations.map(convo => {
-                
-                if(convo.id === id) {
-                    return conversation;
-                }
+        this.conversations = this.conversations.map(conversation => {
+            if (conversation.id !== id) {
+                return conversation;
+            }
 
-                return convo;
-            });
+            return { id: id, name: responseJson["name"], messages: messages }
+        })
 
-            this.emit('message');
-            return;
+        if (!(this.conversations.find(conversation => conversation.id === id))) {
+
+            conversation = { id: id, messages: messages, name: responseJson["name"] }
+
+            if (conversation.name) {
+                this.conversations.push(conversation);
+            }
+
         }
 
-        
         this.emit('message');
 
     }
