@@ -120,7 +120,7 @@ class ContentManager extends EventEmitter {
         if (this.conversations.find(conversation => conversation.id === id)) { //bad solution
             this.conversations = this.conversations.map(convo => {
                 
-                if(convo.id == id) {
+                if(convo.id === id) {
                     return conversation;
                 }
 
@@ -157,7 +157,7 @@ class ContentManager extends EventEmitter {
         } else {
             this.conversations = this.conversations.map(convo => {
                 if (convo.id === message.sender) {
-                   const conversation = {id: convo.id, messages: convo.messages?.concat(message), name: convo.name} as Conversation;
+                   return {id: convo.id, messages: convo.messages?.concat(message), name: convo.name} as Conversation;
                 }
                 
                 return convo;
