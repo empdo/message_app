@@ -1,5 +1,4 @@
 import EventEmitter from 'events';
-import { getTextOfJSDocComment } from 'typescript';
 import { User, Message, Conversation } from './interfaces';
 import SocketHandeler from "./websocket"; 
 
@@ -18,7 +17,7 @@ class ContentManager extends EventEmitter {
 
         this.socketHandeler = new SocketHandeler();
 
-        if (this.token != null) {
+        if (this.token !== null) {
 
             const parsedJwt = this.parseJwt(this.token);
             this.user = { id: parsedJwt.sub, name: parsedJwt.name } as User;
@@ -147,7 +146,6 @@ class ContentManager extends EventEmitter {
     public addMessage = async (message: Message) => {
 
         const existingConvos = this.conversations.map(conversation => conversation.id);
-        let conversation = {} as Conversation;
 
         if (!existingConvos.includes(message.sender)) {
             await this.getConversation(message.sender);
@@ -159,7 +157,7 @@ class ContentManager extends EventEmitter {
         } else {
             this.conversations = this.conversations.map(convo => {
                 if (convo.id === message.sender) {
-                   conversation = {id: convo.id, messages: convo.messages?.concat(message), name: convo.name} as Conversation;
+                   const conversation = {id: convo.id, messages: convo.messages?.concat(message), name: convo.name} as Conversation;
                 }
                 
                 return convo;
