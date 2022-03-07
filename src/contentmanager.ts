@@ -139,6 +139,12 @@ class ContentManager extends EventEmitter {
 
     }
 
+    public sendBlob = async (blob: Blob,) => {
+        if(this.token) {
+            const response = this.request("POST", JSON.stringify({blob}), "/profilepic", this.token);
+        }
+    }
+
     public addMessage = async (message: Message) => {
 
         const existingConvos = this.conversations.map(conversation => conversation.id);

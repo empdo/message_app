@@ -5,6 +5,7 @@ import "./home.scss";
 import Messages from "./Message";
 import { useNavigate, useParams } from "react-router-dom";
 import logoutSvg from "./logout-svgrepo-com.svg";
+import { spawn } from "child_process";
 
 const Conversations = (props: { dispatch: (id: number) => any }) => {
   const { dispatch } = props;
@@ -18,11 +19,11 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
         {conversations.map((conversation) => {
           return (
             <li
-              onClick={() => dispatch(conversation.id)}
-              className="convo-item"
-              key={conversation.id}
+            onClick={() => dispatch(conversation.id)}
+            className="convo-item"
+            key={conversation.id}
             >
-              <span />
+              <img src={`https://messageapi.essung.dev/static/${conversation.id}.png`} alt="" />
               <p>{conversation.name}</p>
             </li>
           );
