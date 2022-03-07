@@ -141,7 +141,7 @@ class ContentManager extends EventEmitter {
 
     public sendBlob = async (blob: Blob,) => {
         if(this.token) {
-            const response = this.request("POST", JSON.stringify({blob}), "/profilepic", this.token);
+            this.request("POST", JSON.stringify({blob}), "/profilepic", this.token);
         }
     }
 
