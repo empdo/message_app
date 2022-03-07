@@ -9,6 +9,7 @@ import logoutSvg from "./logout-svgrepo-com.svg";
 const Conversations = (props: { dispatch: (id: number) => any }) => {
   const { dispatch } = props;
   const conversations = useConversations();
+  const navigate = useNavigate();
 
   let inputId = 0;
 
@@ -58,7 +59,7 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
       </section>
       <section>
         <div id="profile-thing">
-          <h2>{contentManager.user?.name}</h2>
+          <h2 onClick={(e) => {e.preventDefault(); navigate("/profile")}}>  {contentManager.user?.name}</h2>
           <p># {contentManager.user?.id}</p>
           <img
             onClick={() => {
