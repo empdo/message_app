@@ -83,7 +83,17 @@
     margin: 10px;
   }
 
-  img & span{
+  img {
+    height: 30px;
+    width: 30px;
+    margin: 10px ;
+    margin-left: 0px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  span {
     height: 30px;
     width: 30px;
     background-color: #bbb;

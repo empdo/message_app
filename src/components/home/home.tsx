@@ -12,17 +12,20 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
 
   let inputId = 0;
 
+
   const ConversationList = () => {
     return (
       <ul>
         {conversations.map((conversation) => {
+          const url = `https://messageapi.essung.dev/static/${conversation.id}.png`;
+
           return (
             <li
-            onClick={() => dispatch(conversation.id)}
-            className="convo-item"
-            key={conversation.id}
+              onClick={() => dispatch(conversation.id)}
+              className="convo-item"
+              key={conversation.id}
             >
-              <img src={`https://messageapi.essung.dev/static/${conversation.id}.png`} alt="" />
+             <img src={url} alt="img" onError={(e)=>{e.currentTarget.onerror = null; e.currentTarget.src = "https://unstats.un.org/unsd/bigdata/conferences/2017/img/no-pic.png"}} />
               <p>{conversation.name}</p>
             </li>
           );
