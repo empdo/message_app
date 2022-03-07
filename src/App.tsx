@@ -6,7 +6,6 @@ import Login from './components/login/login';
 import Home from './components/home/home';
 import Signup from './components/signup/Signup';
 import Profile from "./components/profile/profile";
-import { profile } from 'console';
 
 export const useToken = () => {
   const [token, setToken] = React.useState<string | null>(localStorage.token || null);
