@@ -5,7 +5,6 @@ import "./home.scss";
 import Messages from "./Message";
 import { useNavigate, useParams } from "react-router-dom";
 import logoutSvg from "./logout-svgrepo-com.svg";
-import { spawn } from "child_process";
 
 const Conversations = (props: { dispatch: (id: number) => any }) => {
   const { dispatch } = props;
