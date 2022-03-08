@@ -26,7 +26,9 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
               className="convo-item"
               key={conversation.id}
             >
-             <img src={url} alt="img" onError={(e)=>{e.currentTarget.onerror = null; e.currentTarget.src = "https://unstats.un.org/unsd/bigdata/conferences/2017/img/no-pic.png"}} />
+              
+              {conversation.picture ? <img alt="img" src={url} /> : <span/>}
+
               <p>{conversation.name}</p>
             </li>
           );

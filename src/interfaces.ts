@@ -1,6 +1,7 @@
 export interface User {
     id: number;
     name: string;
+    picture: string | null;
 }
 
 export interface Message {
@@ -15,4 +16,5 @@ export interface Conversation {
    id: number,
    name: string, 
    messages: Message[] | null,
+    picture: string | null;
 }
