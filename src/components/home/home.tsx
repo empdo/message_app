@@ -27,7 +27,7 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
               key={conversation.id}
             >
               
-              {conversation.picture ? <img alt="img" src={url} /> : <span/>}
+              {conversation.picture ? <img alt=" " src={url} /> : <span/>}
 
               <p>{conversation.name}</p>
             </li>
