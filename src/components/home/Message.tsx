@@ -28,17 +28,21 @@ const Messages = () => {
 
     const MessageTemplate = (props: { shouldShowTime: boolean, classes: string, message: Message }) => {
         const { classes, message, shouldShowTime } = props;
-
+        const picture = [...contentManager.conversations, contentManager.user!].find(conversation => conversation.id === message.sender)?.picture;
+        console.log(picture, shouldShowTime);
 
         return (
             <div className={"message " + classes}>
-                {shouldShowTime &&  
-                    <div className="message-title">
-                            <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
-                            <h5>{formatDate(message)}</h5>
-                    </div>
-                }
-                <p>{message.content}</p>
+                {shouldShowTime && (picture ? <img src={`https://messageapi.essung.dev/static/${picture}`}/> : <span/>)} 
+                <div>
+                    {shouldShowTime &&  
+                            <div className="message-title">
+                                <h3>{message.sender === currentConversation?.id ? currentConversation?.name : contentManager.user?.name}</h3>
+                                <h5>{formatDate(message)}</h5>
+                        </div>
+                    }
+                    <p className={picture === null || shouldShowTime ? "" : "nopic"}>{message.content}</p>
+                </div>
             </div>
         )
     };

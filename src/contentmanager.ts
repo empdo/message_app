@@ -20,7 +20,7 @@ class ContentManager extends EventEmitter {
         if (this.token !== null) {
 
             const parsedJwt = this.parseJwt(this.token);
-            this.user = { id: parsedJwt.sub, name: parsedJwt.name } as User;
+            this.user = { id: parsedJwt.sub, name: parsedJwt.name} as User;
 
             this.socketHandeler.startConnection(this.token); 
 
