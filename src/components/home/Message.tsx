@@ -33,7 +33,7 @@ const Messages = () => {
 
         return (
             <div className={"message " + classes}>
-                {shouldShowTime && (picture ? <img src={`https://messageapi.essung.dev/static/${picture}`}/> : <span/>)} 
+                {shouldShowTime && (picture ? <img alt="" src={`https://messageapi.essung.dev/static/${picture}`}/> : <span/>)} 
                 <div>
                     {shouldShowTime &&  
                             <div className="message-title">
