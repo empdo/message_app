@@ -29,7 +29,7 @@ const Messages = () => {
     const MessageTemplate = (props: { shouldShowTime: boolean, classes: string, message: Message }) => {
         const { classes, message, shouldShowTime } = props;
         const picture = [...contentManager.conversations, contentManager.user!].find(conversation => conversation.id === message.sender)?.picture;
-        console.log(picture, shouldShowTime);
+        console.log(picture, shouldShowTime, message);
 
         return (
             <div className={"message " + classes}>
@@ -41,7 +41,7 @@ const Messages = () => {
                                 <h5>{formatDate(message)}</h5>
                         </div>
                     }
-                    <p className={picture === null || shouldShowTime ? "" : "nopic"}>{message.content}</p>
+                    <p className={shouldShowTime ? "" : "nopic"}>{message.content}</p>
                 </div>
             </div>
         )
