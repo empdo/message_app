@@ -40,7 +40,6 @@ const Messages = () => {
       ...contentManager.conversations,
       contentManager.user!,
     ].find((conversation) => conversation.id === message.sender)?.picture;
-    console.log(picture, shouldShowTime, message);
 
     return (
       <div className={"message " + classes}>
@@ -65,9 +64,8 @@ const Messages = () => {
             </div>
           )}
           <div className={"message-content " + (shouldShowTime ? "" : "nopic")}>
-            <p >{message.content}</p>
-            <h5 className="time">14:52</h5>
-              </div>
+            <p>{message.content}</p>
+          </div>
         </div>
       </div>
     );
