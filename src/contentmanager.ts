@@ -106,6 +106,9 @@ class ContentManager extends EventEmitter {
        if (this.socketHandeler) {
            this.socketHandeler.startConnection(token);
        } 
+
+       this.setLocalUserPicture();
+
     }
 
     public getConversations = async () => {

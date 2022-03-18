@@ -2,6 +2,7 @@ import React from "react";
 import contentManager from "../../contentmanager";
 import "./profile.scss";
 import Resizer from "react-image-file-resizer";
+import { useNavigate } from "react-router-dom";
 import { User } from "../../interfaces";
 
 export const useUser = () => {
@@ -62,22 +63,27 @@ const Profile = () => {
 
   const user = useUser();
   const url = `https://messageapi.essung.dev/static/`;
+  const navigate = useNavigate();
 
   return (
-    <div id="profile">
-      {user && (
-        <div>
+  <>
+  <button id="returnbutton" onClick={() => navigate("/")}>return</button>
+  <div id="profile">
+    {user && (
+          <div>
           {user.picture ? <img alt=" " src={url + user.picture} /> : <></>}
           <h2>{user.name}</h2>
           <p>{user && "#" + user?.id}</p>
-        </div>
-      )}
-
-      <form onSubmit={(e) => upploadImage(e)}>
-        <input type="file" accept="image/*" onChange={(e) => fileChange(e)} />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+          </div>
+          )}
+    
+<h3>profile picture</h3>
+  <form onSubmit={(e) => upploadImage(e)}>
+  <input type="file" accept="image/*" onChange={(e) => fileChange(e)} />
+  <button type="submit">Submit</button>
+  </form>
+  </div>
+  </>
   );
 };
 

@@ -5,6 +5,7 @@ import "./home.scss";
 import Messages from "./Message";
 import { useNavigate, useParams } from "react-router-dom";
 import logoutSvg from "./logout-svgrepo-com.svg";
+import gearSvh from "./iconmonstr-gear-thin.svg";
 
 const Conversations = (props: { dispatch: (id: number) => any }) => {
   const { dispatch } = props;
@@ -61,8 +62,9 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
       </section>
       <section>
         <div id="profile-thing">
-          <h2 onClick={(e) => {e.preventDefault(); navigate("/profile")}}>  {contentManager.user?.name}</h2>
+          <h2 >  {contentManager.user?.name}</h2>
           <p># {contentManager.user?.id}</p>
+          <img onClick={(e) => {e.preventDefault(); navigate("/profile")}}src={gearSvh} alt=" "/>
           <img
             onClick={() => {
               localStorage.removeItem("token");
