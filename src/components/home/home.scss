@@ -63,6 +63,10 @@
       filter: invert(1);
       margin: 15px;
     }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 

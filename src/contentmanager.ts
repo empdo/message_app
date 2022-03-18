@@ -22,11 +22,28 @@ class ContentManager extends EventEmitter {
             const parsedJwt = this.parseJwt(this.token);
             this.user = { id: parsedJwt.sub, name: parsedJwt.name} as User;
 
+            this.setLocalUserPicture();
+
             this.socketHandeler.startConnection(this.token); 
 
             this.emit("message");
 
         }
+
+    }
+
+    public setLocalUserPicture = async () => { //TODO: do it other way becuase this is bad
+        
+        if (!this.user || !this.token) {
+            return;
+        } 
+
+        const response = await this.request("GET", undefined, "/conversation/" + this.user.id, this.token);
+
+        const responseJson = await response.json();
+        this.user.picture = responseJson["picture"];
+
+        this.emit("user");
     }
 
     private request = async (method: "GET" | "POST", body: string | undefined, location: string, token?: string) => {
@@ -215,6 +232,7 @@ class ContentManager extends EventEmitter {
 
 
     public addListener(event: 'message', listener: (message: Message[]) => void): this;
+    public addListener(event: 'user', listener: (user: User) => void): this;
     public addListener(event: string | symbol, listener: (...args: any[]) => void): this {
         return super.addListener(event, listener);
     }
