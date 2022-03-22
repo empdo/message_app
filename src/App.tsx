@@ -50,12 +50,16 @@ const App = () => {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup/>} />
-        <Route path='/profile' element={<Profile/>} />
+        <Route path='/profile' element={
+            <RequireAuth>
+              <Profile/>
+            </RequireAuth>
+        } />
         <Route path='/conversation/:id' 
           element={
-          <RequireAuth>
-            <Home/>
-          </RequireAuth>
+            <RequireAuth>
+              <Home/>
+            </RequireAuth>
           }
  />
         <Route

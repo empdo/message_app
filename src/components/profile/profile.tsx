@@ -90,17 +90,17 @@ const Profile = () => {
           <input type="file" accept="image/*" onChange={(e) => fileChange(e)} />
           <button type="submit">Submit</button>
         </form>
+      </div>
+      </div>
       <button
       id="logout"
         onClick={() => {
           localStorage.removeItem("token");
           window.location.reload();
           if (contentManager.socketHandeler)
-            contentManager.socketHandeler.closeConnection();
+          contentManager.socketHandeler.closeConnection();
         }}
       >logout</button>
-      </div>
-      </div>
     </>
   );
 };
