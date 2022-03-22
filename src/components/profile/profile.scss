@@ -1,7 +1,13 @@
 #profile {
-    display: grid;
+    display: flex;
     justify-items: center;
+    flex-direction: row;
 
+    gap: 2rem;
+
+    h2 {
+        padding-right: 0.5rem;
+    }
     
     div {
         display: flex;
@@ -12,6 +18,30 @@
         }
         
         text-align: center;
+
+        &:first-child {
+            justify-content: start;
+
+            p {
+                padding-right: 10px;
+            }
+        }
+
+        &:last-child {
+            align-items: flex-start;
+            flex-direction: column;
+
+            form {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+
+                    button {
+                        margin: 0;
+                    }
+            }
+        }
     }
     
     img, span {
@@ -29,4 +59,19 @@
     margin: 0;
     left: 2rem;
     top: 2rem;
+}
+
+
+#logout {
+    top: 2rem;
+    right: 2rem;
+    position: absolute;
+    margin: 0;
+}
+
+#profilepic {
+    position: relative;
+    input {
+        display: none;
+    }
 }

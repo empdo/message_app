@@ -4,7 +4,6 @@ import { Conversation } from "../../interfaces";
 import "./home.scss";
 import Messages from "./Message";
 import { useNavigate, useParams } from "react-router-dom";
-import logoutSvg from "./logout-svgrepo-com.svg";
 import gearSvh from "./iconmonstr-gear-thin.svg";
 
 const Conversations = (props: { dispatch: (id: number) => any }) => {
@@ -65,17 +64,6 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
           <h2 >  {contentManager.user?.name}</h2>
           <p># {contentManager.user?.id}</p>
           <img onClick={(e) => {e.preventDefault(); navigate("/profile")}}src={gearSvh} alt=" "/>
-          <img
-            onClick={() => {
-              localStorage.removeItem("token");
-              window.location.reload();
-              if (contentManager.socketHandeler)
-                contentManager.socketHandeler.closeConnection();
-            }}
-            id="logout"
-            src={logoutSvg}
-            alt=""
-          />
         </div>
       </section>
     </div>

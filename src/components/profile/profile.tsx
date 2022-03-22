@@ -64,26 +64,44 @@ const Profile = () => {
   const user = useUser();
   const url = `https://messageapi.essung.dev/static/`;
   const navigate = useNavigate();
+  console.log(profilePicture)
 
   return (
-  <>
-  <button id="returnbutton" onClick={() => navigate("/")}>return</button>
-  <div id="profile">
-    {user && (
+    <>
+      <button id="returnbutton" onClick={() => navigate("/")}>
+        return
+      </button>
+      <div id="profile">
+        {user && (
           <div>
-          {user.picture ? <img alt=" " src={url + user.picture} /> : <></>}
-          <h2>{user.name}</h2>
-          <p>{user && "#" + user?.id}</p>
+            {user.picture ? 
+            <div id="profilepic">
+              <img alt=" " src={url + user.picture} />
+            </div>
+             : <></>}
+            <h2>{user.name}</h2>
+            <p>{user && "#" + user?.id}</p>
           </div>
-          )}
-    
-<h3>profile picture</h3>
-  <form onSubmit={(e) => upploadImage(e)}>
-  <input type="file" accept="image/*" onChange={(e) => fileChange(e)} />
-  <button type="submit">Submit</button>
-  </form>
-  </div>
-  </>
+        )}
+
+      <div>
+        <h3>profile picture</h3>
+        <form onSubmit={(e) => upploadImage(e)}>
+          <input type="file" accept="image/*" onChange={(e) => fileChange(e)} />
+          <button type="submit">Submit</button>
+        </form>
+      <button
+      id="logout"
+        onClick={() => {
+          localStorage.removeItem("token");
+          window.location.reload();
+          if (contentManager.socketHandeler)
+            contentManager.socketHandeler.closeConnection();
+        }}
+      >logout</button>
+      </div>
+      </div>
+    </>
   );
 };
 
