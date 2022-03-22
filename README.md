@@ -11,6 +11,6 @@
 - select friend from contact list
 - start chatting
 
-![Screenshot_20220319_004859](https://user-images.githubusercontent.com/37713376/159097683-8f3ceee5-911e-4492-a59e-a49d9da096f2.png)
+![Screenshot](/screenshot.png)
 
 TODO: fix design and small ui bugs
