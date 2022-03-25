@@ -4,8 +4,8 @@ import "./nav.scss";
 const Nav = () => {
   return (
     <nav>
-      <h3>Message app</h3>
-      <a href="/app">Open message app</a>
+      <h3>Bathub Messaging</h3>
+      <a href="/app">Open app</a>
     </nav>
   );
 };

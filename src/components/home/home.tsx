@@ -7,7 +7,7 @@ const Home = () => {
     <div id="home">
       <Nav />
       <div>
-        <h1>Message app</h1>
+        <h1>Bathub Messaging</h1>
         <p>
           A place where you can connect with friends or even make some new ones!
         </p>
