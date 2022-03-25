@@ -1,0 +1,239 @@
+#main {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+}
+
+#logout {
+}
+
+#banner {
+  text-align: center;
+}
+
+#convo-bar {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  background-color: #333140;
+  padding-left: 20px;
+
+  text-overflow: ellipsis;
+  span {
+      margin: 10px ;
+      margin-left: 0px;
+  }
+
+  ul {
+    max-height: 60vh;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
+
+  section > * {
+    margin: 10px;
+  }
+
+  button {
+    margin-bottom: 10px;
+  }
+
+  input {
+    width: 55px;
+  }
+
+  form {
+      width: 55px;
+  } 
+
+  #profile-thing {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    p {
+        margin: 0 0.5rem;
+    }
+
+    img {
+      cursor: pointer;
+      filter: invert(1);
+      margin: 6px;
+
+          height: 20px;
+    }
+
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+#send-message-container {
+  width: 80%;
+
+  margin: 1.5rem;
+}
+
+.convo-item {
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+
+  * {
+    display: inline;
+    margin: 10px;
+  }
+  
+  img, span {
+    height: 30px;
+    width: 30px;
+    margin: 10px ;
+    margin-left: 0px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+}
+
+#messagelist {
+  overflow-y: scroll;
+  flex: 1;
+
+  &:first-child {
+      margin-top: 1rem;
+  }
+
+  .nopic {
+    margin: 0px 34px;
+  }
+
+  .message {
+    margin: 0 3rem;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: flex-start;
+
+    
+    > div {
+      width: 100%;
+    }
+    
+    .message-content {
+      display: flex;
+      align-content: center;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #181623;
+
+      padding: 0 1rem;
+      
+      &:not(.nopic) {
+        margin: 0 -9px;
+      }
+
+/*       &:hover {
+        background-color: #231e36;
+  
+        .time {
+          display: inline;
+      }
+    } */
+
+    .time {
+      display: none;
+      padding: 0 1rem;
+
+      height: 1rem;
+      width: 1rem;
+
+      transition: 0.1s ease-in-out;
+
+      filter: invert(100%);
+
+      &:hover {
+          height: 1.2rem;
+          width: 1.2rem;
+      }
+    }
+
+    }
+
+    * {
+      display: inline;
+    }
+
+    p {
+      display: block;
+      
+    }
+
+    img, span {
+      height: 30px;
+      width: 30px;
+      margin: 0 0.4rem;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    
+    img:not(.time) {
+      background-color: #bbb;
+      border-radius: 50%;
+    }
+
+
+    .message-title {
+      height: 30px;
+      display: flex;
+      align-items: center;
+
+      h3 {
+        margin: 0 0.4rem;
+      }
+
+    }
+
+  }
+
+  .sender {
+    justify-content: end;
+    text-align: end;
+    flex-direction: row-reverse;
+
+    .message-title {
+      flex-direction: row-reverse;
+    }
+    .message-content {
+      display: flex;
+      align-content: center;
+      align-items: center; 
+      flex-direction: row-reverse;
+    }
+
+  }
+}
+
+.message-container {
+  display: flex;
+
+  flex: 1;
+  flex-direction: column;
+
+  form {
+    bottom: 0;
+    width: 100%;
+
+    background-color: #181623;
+  }
+}
