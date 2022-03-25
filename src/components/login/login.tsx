@@ -1,6 +1,6 @@
 import React from "react";
 import "./login.scss";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import contentManager from "../../contentmanager";
 import { useToken } from "../../App";
 
@@ -9,6 +9,7 @@ const Login = () => {
     let [name, setName] = React.useState("");
     let [password, setPassword] = React.useState("");
     let navigate = useNavigate();
+    let params = useParams();
     
     const token = useToken();
 
@@ -20,7 +21,8 @@ const Login = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         await contentManager.getToken(name, password);
 
-        navigate("/");
+        const route = params.route || "";
+        navigate("/" + route);
     }
 
 

@@ -96,7 +96,7 @@ const Profile = () => {
       id="logout"
         onClick={() => {
           localStorage.removeItem("token");
-          window.location.reload();
+          navigate("/");
           if (contentManager.socketHandeler)
           contentManager.socketHandeler.closeConnection();
         }}
