@@ -68,7 +68,7 @@ const Profile = () => {
 
   return (
     <>
-      <button id="returnbutton" onClick={() => navigate("/")}>
+      <button id="returnbutton" onClick={() => navigate("/app")}>
         return
       </button>
       <div id="profile">
@@ -102,7 +102,7 @@ const Profile = () => {
         id="logout"
         onClick={() => {
           localStorage.removeItem("token");
-          navigate("/app");
+          navigate("/");
           if (contentManager.socketHandeler)
             contentManager.socketHandeler.closeConnection();
         }}
