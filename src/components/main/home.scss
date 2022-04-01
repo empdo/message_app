@@ -61,7 +61,17 @@
         margin: 0 0.5rem;
     }
 
-    img {
+    img:not(:last-child) {
+        height: 30px;
+        width: 30px;
+        margin-right: 10px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+
+    img:last-child {
       cursor: pointer;
       filter: invert(1);
       margin: 6px;

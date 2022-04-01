@@ -13,7 +13,6 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
 
   let inputId = 0;
 
-
   const ConversationList = () => {
     return (
       <ul>
@@ -26,8 +25,7 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
               className="convo-item"
               key={conversation.id}
             >
-              
-              {conversation.picture ? <img alt=" " src={url} /> : <span/>}
+              {conversation.picture ? <img alt=" " src={url} /> : <span />}
 
               <p>{conversation.name}</p>
             </li>
@@ -61,9 +59,27 @@ const Conversations = (props: { dispatch: (id: number) => any }) => {
       </section>
       <section>
         <div id="profile-thing">
-          <h2 >  {contentManager.user?.name}</h2>
+          {contentManager.user?.picture && (
+            <img
+              alt=" "
+              src={
+                `https://messageapi.essung.dev/static/` +
+                contentManager.user?.picture +
+                "?random_number=" +
+                new Date().getTime()
+              }
+            />
+          )}
+          <h2> {contentManager.user?.name}</h2>
           <p># {contentManager.user?.id}</p>
-          <img onClick={(e) => {e.preventDefault(); navigate("/profile")}}src={gearSvh} alt=" "/>
+          <img
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/profile");
+            }}
+            src={gearSvh}
+            alt=" "
+          />
         </div>
       </section>
     </div>

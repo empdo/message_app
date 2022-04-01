@@ -66,7 +66,7 @@ const Profile = () => {
     `https://messageapi.essung.dev/static/` +
     user?.picture +
     "?random_number=" +
-    new Date().getTime();
+    new date().gettime();
   const navigate = useNavigate();
   console.log(profilePicture);
 
