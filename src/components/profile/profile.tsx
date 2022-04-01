@@ -62,7 +62,11 @@ const Profile = () => {
   };
 
   const user = useUser();
-  const url = `https://messageapi.essung.dev/static/`;
+  const url =
+    `https://messageapi.essung.dev/static/` +
+    user?.picture +
+    "?random_number=" +
+    new Date().getTime();
   const navigate = useNavigate();
   console.log(profilePicture);
 
@@ -76,7 +80,7 @@ const Profile = () => {
           <div>
             {user.picture ? (
               <div id="profilepic">
-                <img alt=" " src={url + user.picture} />
+                <img alt=" " src={url} />
               </div>
             ) : (
               <></>
